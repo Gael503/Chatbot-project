@@ -1,0 +1,18 @@
+# conexion a postgresql
+pg:
+  user: PG_USER
+  password: PG_PASSWORD
+  host: pg_HOST
+  port: PG_PORT
+  database: PG_DATABASE
+# configuraciones de tu api
+api:
+  port: API_PORT
+  logger_level: info
+# Servicios de IA
+ia_services:
+  # modelo de ia
+  open_ia:
+    # configuraciones
+    api_key: "API_KEY"
+    model: "MODEL"

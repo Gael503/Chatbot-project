@@ -1,0 +1,7 @@
+{
+    "required": "Campo obligatorio",
+    "max_length": "Máximo {value} caracteres",
+    "min_length": "Mínimo {value} caracteres",
+    "clean_btn": "Limpiar",
+    "send_btn": "Enviar"
+}
