@@ -1,6 +1,6 @@
-import { ResponseProps, BaseResponse } from "./BaseResponse";
+import { type ResponseProps, BaseResponse } from "./BaseResponse";
 
 export {
-    // ResponseProps,
+    ResponseProps,
     BaseResponse
 }

@@ -5,7 +5,7 @@ const router = Router();
 
 router.get("/health", (req: Request, res: Response) =>{
     const response = new BaseResponse();
-    response.success_response()
+    response.setSuccessResponse()
     return res.status(response.code).json(response)
 })
 
