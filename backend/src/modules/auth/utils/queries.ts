@@ -1,0 +1,1 @@
+export const UpdateLastLoginQuery = `update users set last_login = now() where email = $1 and id =$2;`

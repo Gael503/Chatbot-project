@@ -1,14 +1,20 @@
 import { Http_codes, Success_message, Error_message } from "~/utils/Constants";
-export interface ResponseProps {
+export interface ResponseProps<T = any> {
     code?: number;
     message?: string;
     data?: any;
 }
-export class BaseResponse{
-    code: number = Http_codes.bad_request;
-    message: string = "";
-    success: boolean = false;
-    data?: any;
+export class BaseResponse<T = any>{
+    code: number;
+    message: string;
+    success: boolean;
+    data?: T;
+
+    constructor(){
+        this.code = Http_codes.bad_request
+        this.message = "";
+        this.success = false;
+    }
 
     setErrorResponse(props: ResponseProps = {}) {
         this.success = false;

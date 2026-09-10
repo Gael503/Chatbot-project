@@ -1,6 +1,7 @@
 import { Pool } from "pg";
 import config from "config";
 import logger from "../lib/logger.js";
+import { executeQueryProps } from "./interfaces.js";
 
 export default class PostgreSQLConn {
     private static _instance: PostgreSQLConn;
@@ -41,7 +42,17 @@ export default class PostgreSQLConn {
     }
     
     //function to excute sql instructions
-    public async executeQuery(sqlInstruction: string, values: any[] = []) {
-        return this.pool.query(sqlInstruction, values);
+    public async executeQuery({
+        sqlInstruction,
+        values= [],
+        printResults= false }: executeQueryProps) {
+        const res = await this.pool.query(sqlInstruction, values);
+        if(printResults)
+            logger.info({
+                command: res.command,
+                rowCount: res.rowCount,
+                rows: res.rows
+            })
+        return res;
     }
 }
