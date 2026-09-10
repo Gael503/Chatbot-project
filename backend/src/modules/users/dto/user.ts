@@ -1,11 +1,23 @@
 import { BaseResponse, Pagination } from "~/shared";
-export class User{
+//representacion
+export class UserEntity{
     id: number;
     name: string;
     email: string;
     password: string;
     created_at: Date;
     updated_at: Date;
+    is_active: boolean;
+    last_login: Date;
+}
+export class User{
+    id: number;
+    name: string;
+    email: string;
+    created_at: Date;
+    updated_at: Date;
+    is_active: boolean;
+    last_login: Date;
 }
 
 export class UserInfo{
@@ -13,10 +25,7 @@ export class UserInfo{
     name: string;
     email: string;
     password: string;
-}
-
-interface UserCreateData {
-    id_user: number;
+    is_active: boolean;
 }
 
 export class userCreateRequest{
@@ -25,7 +34,7 @@ export class userCreateRequest{
     password: string = "";
 }
 
-export class userCreateResponse extends BaseResponse<UserCreateData>{
+export class userCreateResponse extends BaseResponse<{id_user: number}>{
     constructor(){
         super();
         this.data = {
@@ -39,6 +48,13 @@ export class userSearchRequest {
     name: string = "";
     email: string = "";
     pagination: Pagination = new Pagination();
+}
+
+export class userSearchResponse extends BaseResponse<User[]>{
+    constructor(){
+        super();
+        this.data = []
+    }
 }
 
 export class userInfoResponse extends BaseResponse<UserInfo>{

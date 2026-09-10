@@ -1,6 +1,6 @@
 import PostgreSQLConn from "~/database/posgresql";
-import { CreateUserQuery, getUserInfoByEmail, searchUsers } from "./utils/queries";
-import { userCreateRequest, UserInfo, userSearchRequest } from "./dto/user";
+import { CreateUserQuery, DeactivateUserQuery, getUserInfoByEmail, getUserInfoById, searchUsers } from "./utils/queries";
+import { User, userCreateRequest, UserInfo, userSearchRequest } from "./dto/user";
 import logger from "~/lib/logger";
 const pg = PostgreSQLConn.getInstance();
 
@@ -31,7 +31,19 @@ export const UserInfoByEmail = async (email: string): Promise<UserInfo | null> =
     }
 }
 
-export const AllUsers = async (payload: userSearchRequest) => {
+export const UserInfoById = async (id: number): Promise<UserInfo | null> => {
+    try {
+        const res = await pg.executeQuery({
+            sqlInstruction: getUserInfoById,
+            values: [id]
+        })
+        return res.rows.length ? res.rows[0] as UserInfo : null;
+    } catch (error) {
+        throw new Error(`Error in function ${UserInfoById.name}`)
+    }
+}
+
+export const AllUsers = async (payload: userSearchRequest): Promise<User[] | []> => {
     const { id, email, name, pagination } = payload;
     try {
         let query = searchUsers;
@@ -42,27 +54,44 @@ export const AllUsers = async (payload: userSearchRequest) => {
             query += ` and id = $${values.length}`
         }
 
-        if(email != ""){
+        if(email){
             values.push(email)
             query += ` and email = $${values.length}`
         }
         
-        if(name != ""){
-            values.push(name);
+        if(name){
+            values.push(`%${name}%`);
             query += ` and name ilike $${values.length}`
         }
+        query += ` order by created_at desc`
         const { size, offset } = pagination;
         values.push(size);
         query += ` LIMIT $${values.length}`;
 
         values.push(offset);
         query += ` OFFSET $${values.length}`;
+        
         const res = await pg.executeQuery({
             sqlInstruction: query,
-            values: []
+            values: values
         })
         return res.rows ?? [];
     } catch (error) {
+        logger.error(error)
         throw new Error(`Error in function ${AllUsers.name}`)
+    }
+}
+
+export const DeactivateUser = async (id: number): Promise<boolean> => {
+    try {
+        const res = await pg.executeQuery({
+            sqlInstruction: DeactivateUserQuery,
+            values: [id],
+            printResults: true
+        })
+        return res.rows[0].id ? true : false;
+    } catch (error) {
+        logger.error({error}, "Error: ")
+        throw new Error(`Error in function ${DeactivateUser.name}`)
     }
 }

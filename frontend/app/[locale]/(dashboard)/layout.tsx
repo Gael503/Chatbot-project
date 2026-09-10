@@ -8,7 +8,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     const router = useRouter();
     const activeTab = pathname.split('/').pop() || 'conciliacion';
     const setActiveTab = (tab: any) => {
-        // console.log("Llego: ", tab);
         router.push(`/${tab}`)
     }
     return(

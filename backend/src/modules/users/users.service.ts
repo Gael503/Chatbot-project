@@ -1,6 +1,6 @@
 import { ResponseProps, BaseResponse, WriteInitService, WriteEndService, HandleErrors, Pagination } from "~/shared";
-import { userCreateRequest, userCreateResponse, userInfoResponse, userSearchRequest } from "./dto/user";
-import { createUser, UserInfoByEmail, AllUsers } from "./users.respository";
+import { userCreateRequest, userCreateResponse, userInfoResponse, userSearchRequest, userSearchResponse } from "./dto/user";
+import { createUser, UserInfoByEmail, AllUsers, UserInfoById, DeactivateUser } from "./users.respository";
 import { hashString } from "~/lib/argon2";
 import { Http_codes } from "~/utils/Constants";
 import logger from "~/lib/logger";
@@ -37,18 +37,25 @@ class UserService{
         }
     }
 
-    async Search(payload: userSearchRequest): Promise<BaseResponse> {
+    async Search(payload: userSearchRequest): Promise<userSearchResponse> {
         WriteInitService(this.Search.name)
         let searchInfo = new BaseResponse();
         try {
+            const pagination = Object.assign(new Pagination(), payload.pagination);
+            payload.pagination = pagination;
             const resp = await AllUsers(payload)
-            logger.info({resp}, "Response ")
-            searchInfo.setSuccessResponse({});
+            if(!resp.length){
+                searchInfo.setErrorResponse({message: "No se encontraron usuarios relacionados"})
+                return searchInfo;
+            }
+            searchInfo.setSuccessResponse({message: "Usuarios listados", data: resp});
+            return searchInfo;
         } catch (error: any) {
-            searchInfo = HandleErrors(this.Search.name, error) as BaseResponse
+            searchInfo = HandleErrors(this.Search.name, error) as userSearchResponse
+            return searchInfo
+        } finally{
+            WriteEndService(this.Search.name, searchInfo)
         }
-        WriteEndService(this.Search.name, searchInfo)
-        return searchInfo;
     }
     // debe ser ruta protegida...
     async GetUserInfo(email: string): Promise<userInfoResponse> {
@@ -56,7 +63,6 @@ class UserService{
         let userInfo = new userInfoResponse();
         try {
             const resp = await UserInfoByEmail(email)
-            logger.info({resp}, "Response ")
             if(!resp){
                 userInfo.setErrorResponse({message: "Usuario no existente o activo", code: Http_codes.not_found})
                 return userInfo;
@@ -67,6 +73,54 @@ class UserService{
         }
         WriteEndService(this.GetUserInfo.name, userInfo)
         return userInfo;
+    }
+
+    async GetUserInfoById(id: number): Promise<userInfoResponse> {
+        WriteInitService(this.GetUserInfoById.name)
+        let userInfo = new userInfoResponse();
+        try {
+            const resp = await UserInfoById(id)
+            if(!resp){
+                userInfo.setErrorResponse({message: "Usuario no existente o activo", code: Http_codes.not_found})
+                return userInfo;
+            }
+            userInfo.setSuccessResponse({message: "Usuario encontrado", data: resp});
+        } catch (error: any) {
+            userInfo = HandleErrors(this.GetUserInfoById.name, error) as userInfoResponse
+        }
+        WriteEndService(this.GetUserInfoById.name, userInfo)
+        return userInfo;
+    }
+
+    async Deactivate(id: number): Promise<BaseResponse> {
+        WriteInitService(this.Deactivate.name)
+        let desctivateResp = new BaseResponse();
+        try {
+            const resp = await this.GetUserInfoById(id)
+            if(!resp.success){
+                desctivateResp.setErrorResponse({message: "Usuario no encontrado"})
+                return desctivateResp;
+            }
+            const { data } = resp;
+            if(!data.is_active){
+                desctivateResp.setErrorResponse({message: "Usuario actualmente desactivado"})
+                return desctivateResp;
+            }
+            const isDeactivate: boolean = await DeactivateUser(id);
+            logger.info(`Usuario desactivado?: ${isDeactivate}`)
+            const message = isDeactivate ? "Usuario desactivado correctamente" : "Error al desactivar usuario";
+            if(!isDeactivate){
+                desctivateResp.setErrorResponse({message})
+                return desctivateResp;
+            }
+            desctivateResp.setSuccessResponse({message});
+            return desctivateResp;
+        } catch (error: any) {
+            desctivateResp = HandleErrors(this.Deactivate.name, error) as BaseResponse
+            return desctivateResp;
+        } finally{
+            WriteEndService(this.Deactivate.name, desctivateResp)
+        }
     }
 
 }
