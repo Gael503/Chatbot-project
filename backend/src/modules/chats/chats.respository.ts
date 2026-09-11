@@ -1,0 +1,60 @@
+import PostgreSQLConn from "~/database/posgresql";
+import { getContactsQuery, getHistoryQuery } from "./utils/queries";
+import logger from "~/lib/logger";
+import { ContactsRequest, ContactEntity, HistoryRequest, HistoryEntity } from "./dto/chat";
+const pg = PostgreSQLConn.getInstance();
+
+export const getContacts = async (payload: ContactsRequest): Promise<ContactEntity[]> => {
+    const { pagination } = payload;
+    const values: any[] = []
+    try {
+        let query = getContactsQuery;
+
+        const { size, offset } = pagination;
+        values.push(size);
+        query += ` LIMIT $${values.length}`;
+
+        values.push(offset);
+        query += ` OFFSET $${values.length}`;
+
+        const res = await pg.executeQuery({
+            sqlInstruction: query,
+            values: values
+        })
+        return res.rows.length ? res.rows : null;
+    } catch (error) {
+        logger.error({error}, "Error: ")
+        throw new Error(`Error in function ${getContacts.name}`)
+    }
+}
+
+export const getHistory = async (payload: HistoryRequest): Promise<{
+    history: HistoryEntity[],
+    total: number
+}> => {
+    const { pagination } = payload;
+    const values: any[] = []
+    try {
+        let query = getHistoryQuery;
+
+        values.push(payload.idContact)
+        query += ` and h.contact_id = $${values.length}`
+        
+        const { size, offset } = pagination;
+        values.push(size);
+        query += ` LIMIT $${values.length}`;
+
+        values.push(offset);
+        query += ` OFFSET $${values.length}`;
+        const res = await pg.executeQuery({
+            sqlInstruction: query,
+            values: values,
+        })
+        const history = res.rows.length ? res.rows as HistoryEntity[] : [];
+        const total = res.rows.length > 0 ? res.rows[0].total : 0;
+        return { history, total }
+    } catch (error) {
+        logger.error({error}, "Error: ")
+        throw new Error(`Error in function ${getHistory.name}`)
+    }
+}

@@ -6,7 +6,7 @@ import { userCreateResponse, userSearchRequest, userSearchResponse } from "./dto
 export const CreateUser = async (req: Request, res: Response): Promise <Response> =>{
     let response: userCreateResponse = new userCreateResponse();
     try {
-        // response = await userService.create(req.body);
+        response = await userService.create(req.body);
     } catch (error: any) {
         response = HandleErrors(CreateUser.name, error) as userCreateResponse;
     }

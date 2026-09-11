@@ -4,6 +4,7 @@ import { BaseResponse } from "~/shared";
 //modules
 import AuthRoutes from "./auth/auth.routes"
 import UserRoutes from "./users/users.routes"
+import ChatRoutes from "./chats/chats.routes"
 //main code
 const router = Router();
 
@@ -15,5 +16,6 @@ router.get("/health", (req: Request, res: Response) =>{
 
 router.use("/auth", AuthRoutes)
 router.use("/users", UserRoutes)
+router.use("/chats", ChatRoutes)
 
 export default router;
