@@ -9,6 +9,11 @@ pg:
 api:
   port: API_PORT
   logger_level: info
+  cache_time: "0"
+jwt:
+  secret: MYSECRET
+  # s, m, h, d
+  expires_in: "1hr"
 # Servicios de IA
 ia_services:
   # modelo de ia

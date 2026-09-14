@@ -9,7 +9,8 @@ export default function LoggerIncommingRequest(req: Request, res: Response, next
         path: req.path,
         body: req.body,
         params: req.params,
-        query: req.query
+        query: req.query,
+        internal_process: req.internal_process
     });
     next();
 }

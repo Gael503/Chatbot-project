@@ -5,11 +5,13 @@ import PostgreSQLConn from "./database/posgresql";
 import { main } from "./bot/app";
 import LoggerIncommingRequest from "./middleware/LoggerRequest";
 import routes from "./modules/router"
+import { ValidateToken } from "./middleware/ValidateToken";
 const app = express();
 const port = config.get("api.port")
 const connpg = PostgreSQLConn.getInstance();
 
 app.use(express.json());
+app.use(ValidateToken)
 app.use(LoggerIncommingRequest)
 app.use("/api", routes)
 

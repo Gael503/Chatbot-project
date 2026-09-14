@@ -5,13 +5,11 @@ export class LoginRequest{
     password: string = "";
 }
 
-export class LoginResponse extends BaseResponse<{userId: number, name: string, email: string}>{
+export class LoginResponse extends BaseResponse<{token: string}>{
     constructor(){
         super();
         this.data = {
-            userId: 0,
-            name: "",
-            email: "",
+            token: ""
         }
     }
 }

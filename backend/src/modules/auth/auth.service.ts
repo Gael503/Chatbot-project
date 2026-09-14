@@ -5,6 +5,7 @@ import { userService } from "../users/users.service";
 import { verifyPassword } from "~/lib/argon2";
 import logger from "~/lib/logger";
 import { Http_codes } from "~/utils/Constants";
+import { generateToken } from "./utils/jwt";
 
 class LoginService{
 
@@ -26,10 +27,9 @@ class LoginService{
                 loginData.setErrorResponse({code: Http_codes.unauthorized, message: "Unauthorized"});
                 return loginData;
             }
+            const token:string = await generateToken(data);
             loginData.setSuccessResponse({message: "Ok", data: {
-                userId: data.id,
-                name: data.name,
-                email: data.email
+                token: token
             }});
             await UpdateLastLogin(request.email, data.id)
             return loginData;
