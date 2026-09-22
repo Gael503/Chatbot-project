@@ -6,6 +6,7 @@ import { useState } from "react";
 import { SidebarProps } from "./interfaces";
 import image from "../../public/image.jpeg"
 import { useTranslations } from "next-intl";
+import { authService } from "@/services/auth/auth.service";
 
 export default function Sidebar(props: SidebarProps) {
   const {
@@ -13,6 +14,10 @@ export default function Sidebar(props: SidebarProps) {
     setPath
   } = props;
   const t = useTranslations();
+  const handleLogout = async () =>{
+    await authService.logout();
+    setPath("login")
+  }
   const [isOpen, setIsOpen] = useState(true);
 
   return (
@@ -68,9 +73,7 @@ export default function Sidebar(props: SidebarProps) {
       {/* Cerrar sesión */}
       <div className="mt-auto">
         <button
-          onClick={() => {
-            console.log("Cerrar sesión");
-          }}
+          onClick={handleLogout}
           className="w-full rounded-lg px-4 py-3 text-left text-red-600 hover:bg-red-50"
         >
           {isOpen ? t("menu.close_session") : "🚪"}

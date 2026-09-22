@@ -1,4 +1,4 @@
-import { BaseResponse } from "~/shared";
+import { BaseResponse } from "@/shared/BaseResponse";
 
 export class LoginRequest{
     email: string = "";

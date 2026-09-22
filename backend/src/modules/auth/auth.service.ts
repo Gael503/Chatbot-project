@@ -29,6 +29,9 @@ class LoginService{
             }
             const token:string = await generateToken(data);
             loginData.setSuccessResponse({message: "Ok", data: {
+                userId: data.id,
+                name: data.name,
+                email: data.email,
                 token: token
             }});
             await UpdateLastLogin(request.email, data.id)
