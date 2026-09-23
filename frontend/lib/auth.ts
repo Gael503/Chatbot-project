@@ -13,7 +13,7 @@ async function login(credentials: LoginRequest): Promise<LoginResponse> {
         const { data } = await api.post<LoginResponse>("/auth", {
             email: credentials.email,
             password: credentials.password,
-        });
+        }, { skipAuth: true });
         loginResponse = data;
     } catch(error) {
         throw new Error("Cannot make login correctly try more later");

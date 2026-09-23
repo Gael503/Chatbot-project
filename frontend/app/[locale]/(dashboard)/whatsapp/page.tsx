@@ -1,7 +1,5 @@
-export default function WhatsappPage(){
-    return (
-        <div>
-            Pagina Whatsapp
-        </div>
-    )
+import WhatsAppPage from "@/features/Whatsapp/page";
+
+export default function Page() {
+    return <WhatsAppPage />;
 }

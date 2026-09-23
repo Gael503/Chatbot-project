@@ -1,5 +1,6 @@
-import { MutatingDots } from 'react-loader-spinner'
-export default function LoaderPage(){
+import { MutatingDots, ThreeDots } from 'react-loader-spinner'
+//cargador que cubre toda la pagina
+export function LoaderPage(){
     return(
         <div className='grid m-auto'>
             <MutatingDots
@@ -14,6 +15,23 @@ export default function LoaderPage(){
             wrapperClass=""
             />
             <p className='font-bold text-2xl -ml-2'>Cargando....</p>
+        </div>
+    )
+}
+//cargador generico v1
+export function Loader(props : {className?: string, width?: number, height?: number}){
+    return(
+        <div className={`grid m-auto ${props.className}`}>
+            <ThreeDots
+            visible={true}
+            height={props.height ? props.height : "80"}
+            width={props.width ? props.width : "80"}
+            color="#4fa94d"
+            radius="9"
+            ariaLabel="three-dots-loading"
+            wrapperStyle={{}}
+            wrapperClass=""
+            />
         </div>
     )
 }
