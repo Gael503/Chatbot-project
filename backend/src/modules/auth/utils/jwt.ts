@@ -12,7 +12,7 @@ export const generateToken = async (user: UserInfo) => {
     logger.info("Generando token de acceso")
     return jwt.sign(
         {
-            userId: 99,
+            userId: user.id,
             email: user.email,
             name: user.name,
         },
