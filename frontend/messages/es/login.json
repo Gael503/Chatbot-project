@@ -3,5 +3,8 @@
     "user": "Usuario",
     "password": "Contraseña",
     "user_placeholder": "Usuario App",
-    "password_placeholder": "Contraseña"
+    "password_placeholder": "Contraseña",
+    "unauthorized": "No autorizado",
+    "unauthorized_credentials": "Email y/o contraseña incorrectos",
+    "authorized": "Bienvenido"
 }

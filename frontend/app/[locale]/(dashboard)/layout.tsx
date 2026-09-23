@@ -1,5 +1,6 @@
 "use client"
-import Sidebar from "@/components/ui/sidebar"
+import Sidebar from "@/components/layout/sidebar"
+import Header from "@/components/layout/header";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 
@@ -16,7 +17,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 currentPath={activeTab}
                 setPath={setActiveTab}
             />
-            <main className="flex-1 bg-gray-100 p-6 text-black">
+            
+            <main className="flex-1 p-4 m-2 rounded-2xl border border-gray-200">
+                <Header />
                 {children}
             </main>
         </div>

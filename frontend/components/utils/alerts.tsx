@@ -1,16 +1,33 @@
-import { CheckCircle2Icon } from "lucide-react"
-
+import { AlertProps } from "../ui/interfaces"
+import { CheckCircle2Icon, AlertCircleIcon } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
-export function AlertBasic() {
+export function AlertSuccess(props: AlertProps) {
+    const { title, message } = props;
     return (
-    <Alert className="max-w-md">
-        <CheckCircle2Icon />
-        <AlertTitle>Account updated successfully</AlertTitle>
-        <AlertDescription>
-            Your profile information has been saved. Changes will be reflected
-            immediately.
-        </AlertDescription>
-    </Alert>
+        <div className="absolute right-0 m-4">
+            <Alert className="max-w-md">
+                <CheckCircle2Icon />
+                <AlertTitle>{ title }</AlertTitle>
+                <AlertDescription>
+                    { message }
+                </AlertDescription>
+            </Alert>
+        </div>
+    )
+}
+
+export function AlertFail(props: AlertProps) {
+    const { title, message } = props;
+    return (
+        <div className="absolute right-0 m-4">
+            <Alert variant="destructive" className="max-w-md">
+                <AlertCircleIcon />
+                <AlertTitle>{ title }</AlertTitle>
+                <AlertDescription>
+                    { message }
+                </AlertDescription>
+            </Alert>
+        </div>
     )
 }

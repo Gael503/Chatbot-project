@@ -20,14 +20,13 @@ class AuthService{
             }
             return await this.getCurrentSession();
         } catch (error) {
-            console.log("Error: ");
-            console.log(error);
+            // console.log("Error: ");
+            // console.log(error);
         }
     }
 
     async getCurrentSession(): Promise<Session | null>{
         const session: Session | null = await getSession();
-        console.log("Session: ", session)
         if(!session) return null;
         return session;
     }

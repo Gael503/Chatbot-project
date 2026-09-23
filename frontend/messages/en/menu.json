@@ -1,6 +1,17 @@
 {
-    "home": "Inicio",
-    "status": "Estado del chatbot",
-    "messages": "Mensajes",
-    "close_session": "Cerrar session"
+    "home": {
+        "title": "Home"
+    },
+    "messages": {
+        "title": "Messages",
+        "contacts": "Contacts"
+    },
+    "users":{
+        "title": "Users"
+    },
+    "whatsapp": {
+        "title": "Whatsapp",
+        "qr": "Qr"
+    },
+    "close_session": "Log out"
 }

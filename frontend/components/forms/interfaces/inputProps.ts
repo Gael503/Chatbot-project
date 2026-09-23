@@ -16,4 +16,5 @@ export interface IFieldDataString {
     minlength: number;
     requeried: boolean;
     type: "text" | "password" | "email"
+    disabled: boolean
 }

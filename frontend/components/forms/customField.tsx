@@ -8,11 +8,12 @@ import { useTranslations } from "next-intl"
 export const InputText = (props: IInputStringProps) => {
     const t = useTranslations();
     const { control, fieldInfo } = props;
-    const { id, name, labeltext, maxlength, placeholder, requeried, type, minlength } = fieldInfo;
+    const { id, name, labeltext, maxlength, placeholder, requeried, type, minlength, disabled } = fieldInfo;
     return(
         <Controller
             name={name}
             control={control}
+            disabled={disabled}
             rules={{
                 required: requeried ? t("forms.required") : false,
                 maxLength: {
