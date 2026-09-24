@@ -1,7 +1,4 @@
-export default function UsersPage(){
-    return (
-        <div>
-            Pagina Usuarios
-        </div>
-    )
+import UsersPage from "@/features/Users/page"
+export default function Page(){
+    return <UsersPage />
 }
