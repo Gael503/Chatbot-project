@@ -43,7 +43,10 @@ export const UserInfoById = async (id: number): Promise<UserInfo | null> => {
     }
 }
 
-export const AllUsers = async (payload: userSearchRequest): Promise<User[] | []> => {
+export const AllUsers = async (payload: userSearchRequest): Promise<{
+    users: User[] | [],
+    total: number
+}> => {
     const { id, email, name, pagination } = payload;
     try {
         let query = searchUsers;
@@ -75,7 +78,10 @@ export const AllUsers = async (payload: userSearchRequest): Promise<User[] | []>
             sqlInstruction: query,
             values: values
         })
-        return res.rows ?? [];
+        return {
+            users: res.rows ?? [],
+            total: res.rows[0].total
+        }
     } catch (error) {
         logger.error(error)
         throw new Error(`Error in function ${AllUsers.name}`)

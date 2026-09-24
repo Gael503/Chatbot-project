@@ -8,6 +8,6 @@ export const getUserInfoById = `
     select id, name, email, password, is_active from users u where u.id = $1 
 `
 export const searchUsers = `
-    select id, name, email, created_at, updated_at, is_active, last_login from users u where 1 = 1 
+    select id, name, email, created_at, updated_at, is_active, last_login, COUNT(*) OVER()::int AS total from users u where 1 = 1 
 `
 export const DeactivateUserQuery = `update users u set is_active = false where u.id = $1 returning u.id`

@@ -9,6 +9,7 @@ export const validateBody = (schema: z.ZodType) => {
         const result = schema.safeParse(req.body);
         if (!result.success) {
             logger.warn("Parametros invalidos")
+            logger.info(result.error.flatten())
             const response = new BaseResponse();
             response.setErrorResponse({
                 code: 400,

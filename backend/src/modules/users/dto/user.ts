@@ -50,10 +50,18 @@ export class userSearchRequest {
     pagination: Pagination = new Pagination();
 }
 
-export class userSearchResponse extends BaseResponse<User[]>{
+export class userSearchResult {
+    users: User[] = [];
+    pagination: Pagination = new Pagination();
+}
+
+export class userSearchResponse extends BaseResponse<userSearchResult>{
     constructor(){
         super();
-        this.data = []
+        this.data = {
+            users: [],
+            pagination: new Pagination()
+        }
     }
 }
 

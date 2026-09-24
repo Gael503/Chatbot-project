@@ -39,22 +39,27 @@ class UserService{
 
     async Search(payload: userSearchRequest): Promise<userSearchResponse> {
         WriteInitService(this.Search.name)
-        let searchInfo = new BaseResponse();
+        let searchInfo = new userSearchResponse();
         try {
             const pagination = Object.assign(new Pagination(), payload.pagination);
             payload.pagination = pagination;
-            const resp = await AllUsers(payload)
-            if(!resp.length){
+            const { users, total } = await AllUsers(payload)
+            if(!users.length){
                 searchInfo.setErrorResponse({message: "No se encontraron usuarios relacionados"})
                 return searchInfo;
             }
-            searchInfo.setSuccessResponse({message: "Usuarios listados", data: resp});
+            pagination.total = total;
+            pagination.calculate();
+            searchInfo.setSuccessResponse({message: "Usuarios listados", data: {
+                users: users,
+                pagination: pagination
+            }});
             return searchInfo;
         } catch (error: any) {
             searchInfo = HandleErrors(this.Search.name, error) as userSearchResponse
             return searchInfo
         } finally{
-            WriteEndService(this.Search.name, searchInfo)
+            WriteEndService(this.Search.name, searchInfo.message)
         }
     }
     // debe ser ruta protegida...

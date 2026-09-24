@@ -26,9 +26,9 @@ export class userCreateResponse extends BaseResponse<{id_user: number}>{
 }
 
 export class userSearchRequest {
-    id: number = 0;
-    name: string = "";
-    email: string = "";
+    id?: number;
+    name?: string;
+    email?: string;
     pagination: Pagination = new Pagination();
 }
 
