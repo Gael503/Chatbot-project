@@ -1,25 +1,25 @@
 import { Request, Response, NextFunction } from "express";
 import { BaseResponse } from "~/shared";
-import * as z from "zod";
+import { ValidationChain, validationResult } from "express-validator";
 import logger from "~/lib/logger";
 
-export const validateBody = (schema: z.ZodType) => {
-    return (req: Request, res: Response, next: NextFunction) => {
+export const validateBody = (validations: ValidationChain[]) => {
+    return async (req: Request, res: Response, next: NextFunction) => {
 
-        const result = schema.safeParse(req.body);
-        if (!result.success) {
+        await Promise.all(validations.map((validation) => validation.run(req)));
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
             logger.warn("Parametros invalidos")
-            logger.info(result.error.flatten())
+            logger.info(errors.array())
             const response = new BaseResponse();
             response.setErrorResponse({
                 code: 400,
                 message: "Datos inválidos",
-                data: result.error.flatten()
+                data: errors.array()
             })
             return res.status(response.code).json(response);
         }
-
-        req.body = result.data;
 
         next();
     };

@@ -4,8 +4,10 @@
     "min_length": "Mínimo {value} caracteres",
     "clean_btn": "Limpiar",
     "send_btn": "Enviar",
-    "Pagination": {
-        "page": "Página",
-        "size": "De"
+    "pagination": {
+        "prev": "Previo",
+        "next": "Siguiente",
+        "rows": "N° filas",
+        "records": "Mostrando de {first} al {last} de {totalRecords} registros"
     }
 }

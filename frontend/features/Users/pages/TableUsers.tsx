@@ -4,7 +4,6 @@ import { userSearchRequest, User } from "@/services/users/classes/user"
 import { userService } from "@/services"
 import { DataTable } from "@/components/ui/data-table"
 import { userColumns } from "../components/UserColumns"
-import { Button } from "@/components/ui/button"
 import Pagination from "@/shared/Pagination"
 import { useForm } from "react-hook-form"
 import { InputText } from "@/components/forms/customField"
@@ -50,7 +49,7 @@ export default function TableUsers(){
 
     const handleSearch = handleSubmit((formValues) => {
         const request = cloneRequest(infoRequest)
-        request.id = formValues.id
+        request.id = formValues.id ? Number(formValues.id) : 0
         request.name = formValues.name
         request.email = formValues.email
         request.pagination.page = 1
@@ -63,9 +62,17 @@ export default function TableUsers(){
         searchUsers(request)
     }
 
+    const handleSizeChange = (size: number) => {
+        const request = cloneRequest(infoRequest)
+        request.pagination.size = size
+        request.pagination.page = 1
+        searchUsers(request)
+    }
+
     return (
         <div>
-            <div className="my-4">
+            <div className="my-4 bg-gray-50 rounded-2xl p-3">
+                <p className="border-b-2 p-2 font-bold border-gray-400">Filtros</p>
                 <form onSubmit={handleSearch}>
                     <div className="flex m-2">
                         <InputText 
@@ -126,27 +133,19 @@ export default function TableUsers(){
                 </form>
             </div>
 
-            <DataTable columns={userColumns} data={users} />
-
-            <div className="flex items-center justify-end gap-2">
-                <Button
-                    variant="outline"
-                    disabled={loading || infoRequest.pagination.page <= 1}
-                    onClick={() => handlePageChange(infoRequest.pagination.page - 1)}
-                >
-                    Prev
-                </Button>
-                <span className="text-sm text-muted-foreground">
-                    Page {infoRequest.pagination.page} of {infoRequest.pagination.totalPages || 1}
-                </span>
-                <Button
-                    variant="outline"
-                    disabled={loading || (infoRequest.pagination.total > 0 && infoRequest.pagination.page >= infoRequest.pagination.totalPages)}
-                    onClick={() => handlePageChange(infoRequest.pagination.page + 1)}
-                >
-                    Next
-                </Button>
-            </div>
+            <DataTable
+                columns={userColumns}
+                data={users}
+                pagination={{
+                    page: infoRequest.pagination.page,
+                    size: infoRequest.pagination.size,
+                    totalPages: infoRequest.pagination.totalPages,
+                    totalRecords: infoRequest.pagination.total,
+                    onPageChange: handlePageChange,
+                    onSizeChange: handleSizeChange,
+                    loading,
+                }}
+            />
         </div>
     )
 }

@@ -1,23 +1,16 @@
-import * as z from "zod";
+import { body } from "express-validator";
 
-export const ContactsSchema = z.object({
-    id: z.number().positive().optional(),
-    created_at: z.date().optional(),
+export const ContactsSchema = [
+    body("id").optional().isInt({ min: 1 }).toInt(),
+    body("created_at").optional().isISO8601().toDate(),
 
-    pagination: z.object({
-        page: z.number().int().min(1).default(1),
-        size: z.number().int().min(1).max(100).default(5)
-    })
-});
+    body("pagination.page").optional().isInt({ min: 1 }).toInt().default(1),
+    body("pagination.size").optional().isInt({ min: 1, max: 100 }).toInt().default(5)
+];
 
-export const HistorySchema = z.object({
-    idContact: z.number({message: "idContact es requerido"}).positive(),
+export const HistorySchema = [
+    body("idContact", "idContact es requerido").isInt({ min: 1 }).toInt(),
 
-    pagination: z.object({
-        page: z.number({message: "Page debe ser > 0"}).int().min(1).default(1),
-        size: z.number({message: "Size debe ser > 0"}).int().min(1).max(30).default(5)
-    })
-});
-
-export type ContactsRequest = z.infer<typeof ContactsSchema>;
-export type HistoryRequest = z.infer<typeof HistorySchema>;
+    body("pagination.page", "Page debe ser > 0").optional().isInt({ min: 1 }).toInt().default(1),
+    body("pagination.size", "Size debe ser > 0").optional().isInt({ min: 1, max: 30 }).toInt().default(5)
+];
