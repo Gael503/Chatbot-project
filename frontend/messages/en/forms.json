@@ -3,5 +3,9 @@
     "max_length": "Max {value} caracters",
     "min_length": "Min {value} caracters",
     "clean_btn": "Clean",
-    "send_btn": "Send"
+    "send_btn": "Send",
+    "Pagination": {
+        "page": "Page",
+        "size": "Of"
+    }
 }

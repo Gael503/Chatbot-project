@@ -4,9 +4,11 @@ import { userSearchRequest, User } from "@/services/users/classes/user"
 import { userService } from "@/services"
 import { DataTable } from "@/components/ui/data-table"
 import { userColumns } from "../components/UserColumns"
-import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import Pagination from "@/shared/Pagination"
+import { useForm } from "react-hook-form"
+import { InputText } from "@/components/forms/customField"
+import ButtonsForm from "@/components/forms/buttonsForm"
 
 function cloneRequest(request: userSearchRequest): userSearchRequest {
     const next = Object.assign(new userSearchRequest(), request)
@@ -17,7 +19,9 @@ function cloneRequest(request: userSearchRequest): userSearchRequest {
 export default function TableUsers(){
     const [users, setUsers] = useState<User[]>([])
     const [infoRequest, setInfoRequest] = useState<userSearchRequest>(new userSearchRequest())
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false);
+    const defaultValues = new userSearchRequest();
+    const { control, setValue, handleSubmit, formState: { errors } } = useForm<userSearchRequest>({ defaultValues })
 
     const searchUsers = async (request: userSearchRequest) => {
         setLoading(true)
@@ -40,24 +44,18 @@ export default function TableUsers(){
     }
 
     useEffect(() => {
-        searchUsers(infoRequest)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        searchUsers(defaultValues)
     }, [])
 
-    const handleFilterChange = (field: "id" | "name" | "email", value: string) => {
-        setInfoRequest(prev => {
-            const next = cloneRequest(prev)
-            if (field === "id") next.id = value ? Number(value) : 0
-            else next[field] = value
-            return next
-        })
-    }
 
-    const handleSearch = () => {
+    const handleSearch = handleSubmit((formValues) => {
         const request = cloneRequest(infoRequest)
+        request.id = formValues.id
+        request.name = formValues.name
+        request.email = formValues.email
         request.pagination.page = 1
         searchUsers(request)
-    }
+    })
 
     const handlePageChange = (page: number) => {
         const request = cloneRequest(infoRequest)
@@ -65,60 +63,89 @@ export default function TableUsers(){
         searchUsers(request)
     }
 
-    const { page, totalPages } = infoRequest.pagination
-
     return (
-        <div className="p-4">
-            <div className="container mx-auto py-10 space-y-4">
-                <div className="flex flex-wrap items-end gap-3">
-                    <div className="flex flex-col gap-1">
-                        <label className="text-sm font-medium" htmlFor="filter-id">Id</label>
-                        <Input
-                            id="filter-id"
-                            value={infoRequest.id || ""}
-                            onChange={(e) => handleFilterChange("id", e.target.value)}
+        <div>
+            <div className="my-4">
+                <form onSubmit={handleSearch}>
+                    <div className="flex m-2">
+                        <InputText 
+                            control={control}
+                            fieldInfo={{
+                                id: "filter-id",
+                                labeltext: "Id",
+                                name: "id",
+                                placeholder: "userId",
+                                type: "text",
+                                minlength: 0,
+                                maxlength: 5,
+                                requeried: false,
+                                disabled: false,
+                                className: "mx-2 w-3xs"
+                            }}
+                            setValue={setValue}
+                            errors={errors}
+                        />
+                        <InputText 
+                            control={control}
+                            fieldInfo={{
+                                id: "name",
+                                labeltext: "Nombre de usuario",
+                                name: "name",
+                                placeholder: "user...",
+                                type: "text",
+                                minlength: 0,
+                                maxlength: 20,
+                                requeried: false,
+                                disabled: false,
+                                className: "mx-2 w-3xs"
+                            }}
+                            setValue={setValue}
+                            errors={errors}
+                        />
+                        <InputText 
+                            control={control}
+                            fieldInfo={{
+                                id: "email",
+                                labeltext: "Email",
+                                name: "email",
+                                placeholder: "user@gmail.com",
+                                type: "text",
+                                minlength: 0,
+                                maxlength: 30,
+                                requeried: false,
+                                disabled: false,
+                                className: "mx-2 w-3xs"
+                            }}
+                            setValue={setValue}
+                            errors={errors}
                         />
                     </div>
-                    <div className="flex flex-col gap-1">
-                        <label className="text-sm font-medium" htmlFor="filter-name">Name</label>
-                        <Input
-                            id="filter-name"
-                            value={infoRequest.name}
-                            onChange={(e) => handleFilterChange("name", e.target.value)}
-                        />
+                    <div className="w-1/4 flex m-auto">
+                        <ButtonsForm submit_label="Buscar..."/>
                     </div>
-                    <div className="flex flex-col gap-1">
-                        <label className="text-sm font-medium" htmlFor="filter-email">Email</label>
-                        <Input
-                            id="filter-email"
-                            value={infoRequest.email}
-                            onChange={(e) => handleFilterChange("email", e.target.value)}
-                        />
-                    </div>
-                    <Button onClick={handleSearch} disabled={loading}>Search</Button>
-                </div>
+                </form>
+            </div>
 
-                <DataTable columns={userColumns} data={users} />
+            <DataTable columns={userColumns} data={users} />
 
-                <div className="flex items-center justify-end gap-2">
-                    <Button
-                        variant="outline"
-                        disabled={loading || page <= 1}
-                        onClick={() => handlePageChange(page - 1)}
-                    >
-                        Prev
-                    </Button>
-                    <span className="text-sm text-muted-foreground">
-                        Page {page} of {totalPages || 1}
-                    </span>
-                    <Button
-                        variant="outline"
-                        disabled={loading || (totalPages > 0 && page >= totalPages)}
-                        onClick={() => handlePageChange(page + 1)}
-                    >
-                        Next
-                    </Button>
-                </div>
+            <div className="flex items-center justify-end gap-2">
+                <Button
+                    variant="outline"
+                    disabled={loading || infoRequest.pagination.page <= 1}
+                    onClick={() => handlePageChange(infoRequest.pagination.page - 1)}
+                >
+                    Prev
+                </Button>
+                <span className="text-sm text-muted-foreground">
+                    Page {infoRequest.pagination.page} of {infoRequest.pagination.totalPages || 1}
+                </span>
+                <Button
+                    variant="outline"
+                    disabled={loading || (infoRequest.pagination.total > 0 && infoRequest.pagination.page >= infoRequest.pagination.totalPages)}
+                    onClick={() => handlePageChange(infoRequest.pagination.page + 1)}
+                >
+                    Next
+                </Button>
             </div>
         </div>
     )

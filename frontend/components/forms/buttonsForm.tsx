@@ -7,7 +7,7 @@ export default function ButtonsForm(props: IButtonsForm){
     const { clean_label, submit_label, disable } = props;
     const t = useTranslations();
     return(
-        <div className="w-full flex">
+        <div className="w-full flex bg-none">
             <Button
                 variant="default"
                 type="reset"

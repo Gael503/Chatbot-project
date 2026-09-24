@@ -8,7 +8,7 @@ import { useTranslations } from "next-intl"
 export const InputText = (props: IInputStringProps) => {
     const t = useTranslations();
     const { control, fieldInfo } = props;
-    const { id, name, labeltext, maxlength, placeholder, requeried, type, minlength, disabled } = fieldInfo;
+    const { id, name, labeltext, maxlength, placeholder, requeried, type, minlength, disabled, className } = fieldInfo;
     return(
         <Controller
             name={name}
@@ -26,13 +26,14 @@ export const InputText = (props: IInputStringProps) => {
                 },
             }}
             render={({ field, fieldState }) => (
-                <Field className="my-2">
+                <Field className={className ? className : "my-2"}>
                 <FieldLabel htmlFor={id} className="font-bold">
                     {labeltext}
                 </FieldLabel>
 
                 <Input
                     {...field}
+                    value={field.value ?? ""}
                     id={id}
                     type={type}
                     placeholder={placeholder}
