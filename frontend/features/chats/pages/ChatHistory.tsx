@@ -7,19 +7,21 @@ import { chatService } from "@/services/chats/chats.service"
 import { HistoryRequest, HistoryResponse, Messages } from "@/services/chats/classes"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
+import { useParams } from "next/navigation"
 import { Loader } from "@/components/ui/loader"
 
-export default function ChatHistoryPage(props: {idContact: number}){
+export default function ChatHistoryPage(){
+    const params = useParams<{ id: string }>();
+    const idContact = Number(params.id);
     const [loading, setLoading] = useState<boolean>(true);
     const [messages, setMessages] = useState<Messages[]>([])
-    const defaultValues = new HistoryRequest(props.idContact || 2);
+    const defaultValues = new HistoryRequest(idContact);
 
     const { control, setValue, handleSubmit, formState: { errors } } = useForm<HistoryRequest>({ defaultValues })
     const getMessages = async (request: HistoryRequest) =>{
         setLoading(true)
         try {
             const resp: HistoryResponse = await chatService.history(request);
-            console.log(resp);
             if(!resp.success){
                 console.log("Contactos no disponibles");
                 return;
@@ -42,7 +44,7 @@ export default function ChatHistoryPage(props: {idContact: number}){
                     +52 1512 1590
                 </p>
             </header>
-            <div className="border-2 border-blue-500 my-4 w-full overflow-y-scroll h-140 p-2 flex flex-col">
+            <div className="border-2 border-gray-300 my-4 w-full overflow-y-scroll h-140 p-2 flex flex-col">
                 {
                     loading && <Loader />
                 }

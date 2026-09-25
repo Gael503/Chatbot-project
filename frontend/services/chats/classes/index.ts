@@ -16,11 +16,15 @@ export class ContactsRequest{
     pagination: Pagination = new Pagination();
 }
 
-export class ContactResponse extends BaseResponse<Contact[]>{
-    data: Contact[]
+export class contactSearchResult {
+    contacts: Contact[] = [];
+    pagination: Pagination = new Pagination();
+}
+
+export class ContactResponse extends BaseResponse<contactSearchResult>{
     constructor(){
         super();
-        this.data = []
+        this.data = new contactSearchResult();
     }
 }
 

@@ -4,7 +4,10 @@ import logger from "~/lib/logger";
 import { ContactsRequest, ContactEntity, HistoryRequest, HistoryEntity } from "./dto/chat";
 const pg = PostgreSQLConn.getInstance();
 
-export const getContacts = async (payload: ContactsRequest): Promise<ContactEntity[]> => {
+export const getContacts = async (payload: ContactsRequest): Promise<{
+    contacts: ContactEntity[],
+    total: number
+}> => {
     const { pagination } = payload;
     const values: any[] = []
     try {
@@ -21,7 +24,12 @@ export const getContacts = async (payload: ContactsRequest): Promise<ContactEnti
             sqlInstruction: query,
             values: values
         })
-        return res.rows.length ? res.rows : null;
+        const contacts = res.rows.length ? res.rows as ContactEntity[] : [];
+        const total = res.rows.length > 0 ? res.rows[0].total : 0;
+        return {
+            contacts: contacts,
+            total: total
+        }
     } catch (error) {
         logger.error({error}, "Error: ")
         throw new Error(`Error in function ${getContacts.name}`)

@@ -2,9 +2,10 @@
     "home": {
         "title": "Inicio"
     },
-    "messages": {
+    "chats": {
         "title": "Mensajes",
-        "contacts": "Contactos"
+        "contacts": "Contactos",
+        "detail": "Historial"
     },
     "users":{
         "title": "Usuarios"

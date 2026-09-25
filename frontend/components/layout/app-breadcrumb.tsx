@@ -21,6 +21,12 @@ export function AppBreadcrumb() {
 
   const getLabel = (index: number): string => {
     const segment = segments[index];
+    const parent = segments[index - 1];
+    //para no renderizar el [id] en la navegacion dinamica
+    if (parent === "chats" && /^\d+$/.test(segment)) {
+      return t("chats.detail");
+    }
+
     return t.has(segment) ? t(`${segment}.title`) : segment;
   };
 
@@ -46,7 +52,7 @@ export function AppBreadcrumb() {
 
           return (
             <Fragment key={segment}>
-              <House />
+              {index == 0 && <House />}
               {index > 0 && <BreadcrumbSeparator />}
               <BreadcrumbItem>
                 {isLast ? (

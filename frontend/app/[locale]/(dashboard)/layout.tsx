@@ -8,7 +8,7 @@ import { useState } from "react";
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
     const router = useRouter();
-    const activeTab = pathname.split('/').pop() || 'conciliacion';
+    const activeTab = pathname.split('/').filter(Boolean)[1] || 'conciliacion';
     const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
     const setActiveTab = (tab: any) => {
         router.push(`/${tab}`)

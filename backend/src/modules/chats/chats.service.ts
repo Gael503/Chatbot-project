@@ -11,12 +11,17 @@ class ChatService{
         try {
             const pagination = Object.assign(new Pagination(), payload.pagination);
             payload.pagination = pagination;
-            const contacts = await getContacts(payload);
+            const { contacts, total } = await getContacts(payload);
             if(!contacts.length){
                 contactsResponse.setErrorResponse({code: Http_codes.not_found, message: "No se encontraron contactos", data: []})
                 return contactsResponse;
             }
-            contactsResponse.setSuccessResponse({message: "Contactos Obtenidos", data: contacts})
+            pagination.total = total;
+            pagination.calculate();
+            contactsResponse.setSuccessResponse({message: "Contactos Obtenidos", data: {
+                contacts: contacts,
+                pagination: pagination
+            }})
             return contactsResponse;
         } catch (error: any) {
             contactsResponse = HandleErrors(this.Contacts.name, error) as ContactResponse;

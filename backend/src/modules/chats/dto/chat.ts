@@ -19,11 +19,15 @@ export class HistoryEntity{
 export class ContactsRequest extends ContactEntity{
     pagination: Pagination = new Pagination();
 }
+export class contactSearchResult {
+    contacts: ContactEntity[] = [];
+    pagination: Pagination = new Pagination();
+}
 
-export class ContactResponse extends BaseResponse<ContactEntity[]>{
+export class ContactResponse extends BaseResponse<contactSearchResult>{
     constructor(){
         super();
-        this.data = []
+        this.data = new contactSearchResult();
     }
 }
 

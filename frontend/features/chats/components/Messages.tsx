@@ -1,6 +1,6 @@
 import { Bot, User } from "lucide-react"
-import { messageData } from "../interfaces"
 import { Messages } from "@/services/chats/classes"
+import { formatDate } from "@/components/utils/formatDate";
 
 export function BotMessage(object: Messages){
     const { content, created_at } = object;
@@ -8,7 +8,7 @@ export function BotMessage(object: Messages){
         <div className="flex mx-4 my-2 justify-end">
             <div className="mr-2 border w-1/4 p-2 rounded-b-md rounded-tl-md bg-blue-300">
                 { content }
-                <p className="text-sm font-bold m-1"> {created_at} </p>
+                <p className="text-sm font-bold m-1"> { formatDate(created_at )} </p>
             </div>
             <Bot className="border rounded-2xl mr-0" width={30} height={30}/>
         </div>
@@ -22,7 +22,7 @@ export function UserMessage(object: Messages){
             <User className="border rounded-2xl" width={30} height={30}/>
             <div className="ml-2 border w-1/4 p-2 rounded-b-md rounded-tr-md bg-emerald-200">
                 { content }
-                <p className="text-sm font-bold m-1 text-end"> { created_at } </p>
+                <p className="text-sm font-bold m-1 text-end"> { formatDate(created_at) } </p>
             </div>
         </div>
     )
