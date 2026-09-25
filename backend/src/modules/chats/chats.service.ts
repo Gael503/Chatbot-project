@@ -1,6 +1,6 @@
 import { ResponseProps, BaseResponse, WriteInitService, WriteEndService, HandleErrors, Pagination } from "~/shared";
 import { HistoryRequest, HistoryResponse, ContactsRequest, ContactResponse, HistoryEntity, Messages } from "./dto/chat";
-import { getContacts, getHistory } from "./chats.respository";
+import { getContacts, getHistory, getContactInfo } from "./chats.respository";
 import { Http_codes } from "~/utils/Constants";
 import logger from "~/lib/logger";
 class ChatService{
@@ -35,6 +35,11 @@ class ChatService{
         WriteInitService(this.History.name)
         let historyResponse = new HistoryResponse();
         try {
+            const contactInfo = await getContactInfo(payload.idContact);
+            if(!contactInfo){
+                historyResponse.setErrorResponse({code: Http_codes.not_found, message: "No se encontro contacto solicitado", data: []})
+                return historyResponse;
+            }
             const pagination = Object.assign(new Pagination(), payload.pagination);
             payload.pagination = pagination;
             const { history, total } = await getHistory(payload);
@@ -47,6 +52,7 @@ class ChatService{
             pagination.total = total;
             pagination.calculate();
             historyResponse.setSuccessResponse({message: "Historial recuperado", data: {
+                phone: contactInfo.phone,
                 messages: messages,
                 pagination: pagination
             }})

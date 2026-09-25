@@ -44,6 +44,7 @@ export class Messages {
 }
 
 export class messagesHistoryResult {
+    phone: string = "";
     messages: Messages[] = [];
     pagination: Pagination = new Pagination();
 }

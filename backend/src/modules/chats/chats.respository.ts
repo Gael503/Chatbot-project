@@ -1,5 +1,5 @@
 import PostgreSQLConn from "~/database/posgresql";
-import { getContactsQuery, getHistoryQuery } from "./utils/queries";
+import { getContactsQuery, getHistoryQuery, getContactById } from "./utils/queries";
 import logger from "~/lib/logger";
 import { ContactsRequest, ContactEntity, HistoryRequest, HistoryEntity } from "./dto/chat";
 const pg = PostgreSQLConn.getInstance();
@@ -64,5 +64,20 @@ export const getHistory = async (payload: HistoryRequest): Promise<{
     } catch (error) {
         logger.error({error}, "Error: ")
         throw new Error(`Error in function ${getHistory.name}`)
+    }
+}
+
+export const getContactInfo = async (id_contact: number): Promise<ContactEntity | null> => {
+    logger.info("Aqui")
+    try {
+        const res = await pg.executeQuery({
+            sqlInstruction: getContactById,
+            values: [id_contact],
+            printResults: true
+        })
+        return res.rows[0] ?? null
+    } catch (error) {
+        logger.error({error}, "Error: ")
+        throw new Error(`Error in function ${getContactInfo.name}`)
     }
 }

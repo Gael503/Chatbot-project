@@ -14,7 +14,8 @@ export default function ChatHistoryPage(){
     const params = useParams<{ id: string }>();
     const idContact = Number(params.id);
     const [loading, setLoading] = useState<boolean>(true);
-    const [messages, setMessages] = useState<Messages[]>([])
+    const [messages, setMessages] = useState<Messages[]>([]);
+    const [phone, setPhone] = useState<string>("Unknow")
     const defaultValues = new HistoryRequest(idContact);
 
     const { control, setValue, handleSubmit, formState: { errors } } = useForm<HistoryRequest>({ defaultValues })
@@ -27,6 +28,7 @@ export default function ChatHistoryPage(){
                 return;
             }
             setMessages(resp.data?.messages ?? [])
+            setPhone(resp.data?.phone ?? "Unknow")
         } catch (error) {
             setMessages([])
         } finally {
@@ -41,7 +43,7 @@ export default function ChatHistoryPage(){
             <header className="border-b-2 border-gray-200 p-2 flex">
                 <SquareUser width={50} height={50}/>
                 <p className="my-auto font-bold">
-                    +52 1512 1590
+                    { phone }
                 </p>
             </header>
             <div className="border-2 border-gray-300 my-4 w-full overflow-y-scroll h-140 p-2 flex flex-col">

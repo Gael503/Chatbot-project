@@ -43,6 +43,7 @@ export class Messages {
 
 }
 export class messagesHistoryResult {
+    phone: string = "";
     messages: Messages[] = [];
     pagination: Pagination = new Pagination();
 }
@@ -51,6 +52,7 @@ export class HistoryResponse extends BaseResponse<messagesHistoryResult>{
     constructor(){
         super();
         this.data = {
+            phone: "",
             messages: [],
             pagination: new Pagination()
         }
