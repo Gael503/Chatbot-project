@@ -2,7 +2,7 @@ import { useForm, UseFormSetValue } from "react-hook-form"
 
 export interface IInputStringProps {
   control:any;
-  setValue: UseFormSetValue<any>;
+  setValue: UseFormSetValue<any> | null;
   fieldInfo: IFieldDataString;
   errors: any
 }

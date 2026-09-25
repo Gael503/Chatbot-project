@@ -38,11 +38,15 @@ export class Messages {
     created_at: Date;
 
 }
-export class HistoryResponse extends BaseResponse<Messages[]>{
-    pagination: Pagination;
+
+export class messagesHistoryResult {
+    messages: Messages[] = [];
+    pagination: Pagination = new Pagination();
+}
+
+export class HistoryResponse extends BaseResponse<messagesHistoryResult>{
     constructor(){
         super();
-        this.data = []
-        this.pagination = new Pagination();
+        this.data = new messagesHistoryResult();
     }
 }

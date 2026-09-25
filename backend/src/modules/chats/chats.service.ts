@@ -41,8 +41,10 @@ class ChatService{
             const messages = await this.DefineTypeMessage(history);
             pagination.total = total;
             pagination.calculate();
-            historyResponse.pagination = pagination;
-            historyResponse.setSuccessResponse({message: "Historial recuperado", data: messages})
+            historyResponse.setSuccessResponse({message: "Historial recuperado", data: {
+                messages: messages,
+                pagination: pagination
+            }})
             return historyResponse;
         } catch (error: any) {
             historyResponse = HandleErrors(this.History.name, error) as HistoryResponse;

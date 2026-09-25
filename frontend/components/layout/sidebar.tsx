@@ -75,7 +75,7 @@ export default function Sidebar(props: SidebarProps) {
 
           <Button
             className="w-full border-2 hover:bg-gray-300 p-4 cursor-pointer"
-            onClick={() => handleNavigate("messages")}
+            onClick={() => handleNavigate("chats")}
           >
             <MessageCircle />
             <p className={`ml-0 mr-auto font-bold ${isOpen ? "" : "md:hidden"}`}>{t("menu.messages.title")}</p>
