@@ -47,6 +47,7 @@ export const getHistory = async (payload: HistoryRequest): Promise<{
 
         values.push(payload.idContact)
         query += ` and h.contact_id = $${values.length}`
+        query += ` order by h.created_at desc`
         
         const { size, offset } = pagination;
         values.push(size);
