@@ -6,3 +6,16 @@ export const WriteEndService = (functionName: string, response: BaseResponse | a
     logger.info("Final response: ")
     logger.info(response)
 }
+
+//ayuda a censurar x propiedad en el objeto que envies, indica el campo
+const hideField = (obj: any, field: string) => {
+    if (typeof obj[field] === "string") {
+        obj[field] = `${obj[field].slice(0, 8)}...`;
+    }
+};
+
+export const WriteSensitiveData = async (data: any) => {
+    const tempData = { ...data };
+    hideField(tempData, "password")
+    logger.info(tempData)
+}

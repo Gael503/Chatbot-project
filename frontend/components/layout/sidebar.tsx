@@ -1,11 +1,10 @@
 "use client";
 import { Button } from "@/components/ui/button"
-import Image from "next/image";
 import { useState } from "react";
 import { SidebarProps } from "../ui/interfaces";
 import { useTranslations } from "next-intl";
 import { authService } from "@/services/auth/auth.service";
-import { House, Menu, Smartphone, UsersRound, MessageCircle, LogOut, Bot, X } from "lucide-react"
+import { House, Menu, Smartphone, UsersRound, MessageCircle, LogOut, Bot, X, SquareTerminal } from "lucide-react"
 
 export default function Sidebar(props: SidebarProps) {
   const {
@@ -25,6 +24,7 @@ export default function Sidebar(props: SidebarProps) {
     setPath(tab);
     onMobileClose();
   }
+  const classBtn = (path: string) => `w-full border-2 hover:bg-gray-300 p-4 cursor-pointer font-bold ${currentPath === path ? "bg-blue-300 text-white" : ""}` 
 
   return (
     <>
@@ -66,7 +66,7 @@ export default function Sidebar(props: SidebarProps) {
         {/* Navegación */}
         <nav className="flex flex-col gap-2 text-black">
           <Button
-            className="w-full border-2 hover:bg-gray-300 p-4 cursor-pointer"
+            className={classBtn("home")}
             onClick={() => handleNavigate("home")}
           >
             <House />
@@ -74,7 +74,15 @@ export default function Sidebar(props: SidebarProps) {
           </Button>
 
           <Button
-            className="w-full border-2 hover:bg-gray-300 p-4 cursor-pointer"
+            className={classBtn("prompt")}
+            onClick={() => handleNavigate("prompt")}
+          >
+            <SquareTerminal />
+            <p className={`ml-0 mr-auto font-bold ${isOpen ? "" : "md:hidden"}`}>{t("menu.prompts.title")}</p>
+          </Button>
+
+          <Button
+            className={classBtn("chats")}
             onClick={() => handleNavigate("chats")}
           >
             <MessageCircle />
@@ -82,7 +90,7 @@ export default function Sidebar(props: SidebarProps) {
           </Button>
 
           <Button
-            className="w-full border-2 hover:bg-gray-300 p-4 cursor-pointer text-star"
+            className={classBtn("users")}
             onClick={() => handleNavigate("users")}
           >
             <UsersRound />
@@ -90,7 +98,7 @@ export default function Sidebar(props: SidebarProps) {
           </Button>
 
           <Button
-            className="w-full border-2 hover:bg-gray-300 p-4 cursor-pointer text-star"
+            className={classBtn("whatsapp")}
             onClick={() => handleNavigate("whatsapp")}
           >
             <Smartphone />
