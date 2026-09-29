@@ -6,6 +6,7 @@ import AuthRoutes from "./auth/auth.routes"
 import UserRoutes from "./users/users.routes"
 import ChatRoutes from "./chats/chats.routes"
 import WhatsAppRoutes from "./whatsapp/whatsapp.routes"
+import PromptRoutes from "./prompt/prompt.routes"
 //main code
 const router = Router();
 
@@ -19,5 +20,6 @@ router.use("/auth", AuthRoutes)
 router.use("/users", UserRoutes)
 router.use("/chats", ChatRoutes)
 router.use("/whatsapp", WhatsAppRoutes)
+router.use("/prompt", PromptRoutes)
 
 export default router;
