@@ -19,6 +19,16 @@ export const api = axios.create({
     validateStatus: (status: number) => status >= 200 && status < 300 || status >= 400 && status <= 404
 })
 
+export const apiForm = axios.create({
+    baseURL,
+    headers: {
+        'Accept': 'application/json',
+    },
+    timeout: 30000,
+    //dejar pasar los codigos de error que mande el be
+    validateStatus: (status: number) => status >= 200 && status < 300 || status >= 400 && status <= 404
+})
+
 // Token always comes fresh from the NextAuth session — never store it in module state,
 // since on the server that state would be shared across every user's concurrent request.
 async function getAccessToken(): Promise<string | undefined> {
@@ -35,7 +45,12 @@ async function getAccessToken(): Promise<string | undefined> {
 
 api.interceptors.request.use(async (config) => {
     if (config.skipAuth) return config;
+    const token = await getAccessToken();
+    if (token) config.headers.Authorization = `bearer ${token}`;
+    return config;
+});
 
+apiForm.interceptors.request.use(async (config) => {
     const token = await getAccessToken();
     if (token) config.headers.Authorization = `bearer ${token}`;
     return config;

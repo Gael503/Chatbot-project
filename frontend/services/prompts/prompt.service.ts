@@ -1,4 +1,4 @@
-import { api } from "@/lib/api";
+import { api, apiForm } from "@/lib/api";
 import { PromptResponse, PromptsListRequest, PromptsListResponse } from "./classes";
 import { BaseResponse } from "@/shared";
 
@@ -25,10 +25,12 @@ class PromptService{
         }
     }
 
-    async create(content: string): Promise<PromptResponse>{
+    async create(filePrompt: File): Promise<PromptResponse>{
+        const form = new FormData();
+        form.append("file", filePrompt)
         let createPromptResponse = new PromptResponse();
         try {
-            const resp = await api.post<PromptResponse>("/prompt", { content })
+            const resp = await apiForm.post<PromptResponse>("/prompt", form)
             createPromptResponse = resp.data;
             return createPromptResponse;
         } catch (error) {

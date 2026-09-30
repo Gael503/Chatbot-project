@@ -10,23 +10,18 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-
-interface CreatePromptDialogProps {
-    onCreated: () => void
-}
+import { CreatePromptDialogProps } from "../interfaces"
 
 export default function CreatePromptDialog({ onCreated }: CreatePromptDialogProps) {
     const [open, setOpen] = useState(false)
     const [dragging, setDragging] = useState(false)
-    const [fileName, setFileName] = useState<string>("")
-    const [content, setContent] = useState<string>("")
+    const [file, setFile] = useState<File | null>(null)
     const [error, setError] = useState<string>("")
     const [submitting, setSubmitting] = useState(false)
     const inputRef = useRef<HTMLInputElement>(null)
 
     const reset = () => {
-        setFileName("")
-        setContent("")
+        setFile(null)
         setError("")
         setDragging(false)
     }
@@ -46,16 +41,7 @@ export default function CreatePromptDialog({ onCreated }: CreatePromptDialogProp
             setError("Solo se permiten archivos .txt")
             return
         }
-        const reader = new FileReader()
-        reader.onload = () => {
-            setError("")
-            setFileName(file.name)
-            setContent(String(reader.result ?? ""))
-        }
-        reader.onerror = () => {
-            setError("No se pudo leer el archivo")
-        }
-        reader.readAsText(file)
+        setFile(file)
     }
 
     const handleDrop = (event: DragEvent<HTMLDivElement>) => {
@@ -74,13 +60,13 @@ export default function CreatePromptDialog({ onCreated }: CreatePromptDialogProp
     }
 
     const handleSubmit = async () => {
-        if (!content) {
-            setError("Selecciona un archivo .txt")
-            return
+        if(!file){
+            console.log("No hay archivo por enviar");
+            return;
         }
         setSubmitting(true)
         try {
-            const resp = await promptService.create(content)
+            const resp = await promptService.create(file)
             if (!resp.success) {
                 setError(resp.message || "No se pudo crear el prompt")
                 return
@@ -114,14 +100,13 @@ export default function CreatePromptDialog({ onCreated }: CreatePromptDialogProp
                     }`}
                 >
                     <input
-                        ref={inputRef}
                         type="file"
                         accept=".txt,text/plain"
                         className="hidden"
-                        onChange={(event) => readFile(event.target.files?.[0])}
+                        onChange={(event) => setFile(event.target.files?.[0] ?? null)}
                     />
-                    {fileName ? (
-                        <p className="font-medium">{fileName}</p>
+                    {file ? (
+                        <p className="font-medium">{file.name}</p>
                     ) : (
                         <p className="text-gray-500">
                             Arrastra un archivo .txt aquí o haz click para seleccionarlo
@@ -132,7 +117,7 @@ export default function CreatePromptDialog({ onCreated }: CreatePromptDialogProp
                 {error && <p className="text-sm text-red-600 mt-2">{error}</p>}
 
                 <div className="flex justify-end mt-4">
-                    <Button onClick={handleSubmit} disabled={submitting || !content}>
+                    <Button onClick={handleSubmit} disabled={submitting || !file}>
                         {submitting ? "Guardando..." : "Guardar"}
                     </Button>
                 </div>

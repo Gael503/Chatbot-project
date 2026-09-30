@@ -5,13 +5,10 @@ import { type DataTableFeatures } from "@/components/table-features"
 import { promptData } from "@/services/prompts/classes"
 import { Button } from "@/components/ui/button"
 import { formatDate } from "@/components/utils/formatDate"
-
+import { ColumsPrompts } from "../interfaces"
 const columnHelper = createColumnHelper<DataTableFeatures, promptData>()
 
-export function getPromptColumns(props: {
-    onView: (prompt: promptData) => void,
-    turnOn: (prompt: promptData) => void
-}) {
+export function getPromptColumns(props: ColumsPrompts) {
     const { onView, turnOn } = props;
     return columnHelper.columns([
         columnHelper.accessor("id", {

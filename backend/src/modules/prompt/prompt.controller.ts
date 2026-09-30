@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { Http_codes } from "~/utils/Constants";
 import { promptService } from "./prompt.service";
 import { BaseResponse, HandleErrors } from "~/shared";
 import { PromptResponse, PromptsListResponse } from "./dto/prompt";
@@ -27,9 +26,14 @@ export const PromptsList = async (req: Request, res: Response): Promise <Respons
 export const CreatePrompt = async (req: Request, res: Response): Promise <Response> =>{
     let response: PromptResponse = new PromptResponse();
     try {
-        response = await promptService.create(req.body.content, req.internal_process);
+        if(!req.file){
+            response.setErrorResponse({ message: "No se recibió ningún archivo" });
+            return res.status(response.code).send(response);
+        }
+        const content = req.file.buffer.toString("utf-8");
+        response = await promptService.create(content, req.internal_process);
     } catch (error: any) {
-        response = HandleErrors(CurrentPrompt.name, error) as PromptResponse;
+        response = HandleErrors(CreatePrompt.name, error) as PromptResponse;
     }
     return res.status(response.code).send(response)
 }
