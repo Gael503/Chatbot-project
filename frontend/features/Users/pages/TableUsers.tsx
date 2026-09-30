@@ -8,12 +8,9 @@ import Pagination from "@/shared/Pagination"
 import { useForm } from "react-hook-form"
 import { InputText } from "@/components/forms/customField"
 import ButtonsForm from "@/components/forms/buttonsForm"
+import { cloneRequest, handlePageChange, handleSizeChange } from "@/components/utils/pagination"
 
-function cloneRequest(request: userSearchRequest): userSearchRequest {
-    const next = Object.assign(new userSearchRequest(), request)
-    next.pagination = Object.assign(new Pagination(), request.pagination)
-    return next
-}
+const newRequest = () => new userSearchRequest()
 
 export default function TableUsers(){
     const [users, setUsers] = useState<User[]>([])
@@ -28,7 +25,7 @@ export default function TableUsers(){
             const response = await userService.search(request)
             if (response.success && response.data) {
                 setUsers(response.data.users)
-                const nextRequest = cloneRequest(request)
+                const nextRequest = cloneRequest(newRequest, request)
                 nextRequest.pagination = Object.assign(new Pagination(), response.data.pagination)
                 setInfoRequest(nextRequest)
             } else {
@@ -48,7 +45,7 @@ export default function TableUsers(){
 
 
     const handleSearch = handleSubmit((formValues) => {
-        const request = cloneRequest(infoRequest)
+        const request = cloneRequest(newRequest, infoRequest)
         request.id = formValues.id ? Number(formValues.id) : 0
         request.name = formValues.name
         request.email = formValues.email
@@ -56,18 +53,8 @@ export default function TableUsers(){
         searchUsers(request)
     })
 
-    const handlePageChange = (page: number) => {
-        const request = cloneRequest(infoRequest)
-        request.pagination.page = page
-        searchUsers(request)
-    }
-
-    const handleSizeChange = (size: number) => {
-        const request = cloneRequest(infoRequest)
-        request.pagination.size = size
-        request.pagination.page = 1
-        searchUsers(request)
-    }
+    const onPageChange = (page: number) => handlePageChange(newRequest, infoRequest, page, searchUsers)
+    const onSizeChange = (size: number) => handleSizeChange(newRequest, infoRequest, size, searchUsers)
 
     return (
         <div>
@@ -141,8 +128,8 @@ export default function TableUsers(){
                     size: infoRequest.pagination.size,
                     totalPages: infoRequest.pagination.totalPages,
                     totalRecords: infoRequest.pagination.total,
-                    onPageChange: handlePageChange,
-                    onSizeChange: handleSizeChange,
+                    onPageChange,
+                    onSizeChange,
                     loading,
                 }}
             />

@@ -11,14 +11,9 @@ import { useParams } from "next/navigation"
 import { Loader } from "@/components/ui/loader"
 import Pagination from "@/shared/Pagination"
 import { Button } from "@base-ui/react/button"
+import { cloneRequest } from "@/components/utils/pagination"
 
 const SCROLL_TOP_THRESHOLD = 40;
-
-function cloneRequest(request: HistoryRequest): HistoryRequest {
-    const next = Object.assign(new HistoryRequest(request.idContact), request)
-    next.pagination = Object.assign(new Pagination(), request.pagination)
-    return next
-}
 
 export default function ChatHistoryPage(){
     const params = useParams<{ id: string }>();
@@ -47,7 +42,7 @@ export default function ChatHistoryPage(){
             scrollToBottomRef.current = true;
             setMessages([...resp.data.messages].reverse())
             setPhone(resp.data.phone || "Unknow")
-            setInfoRequest(Object.assign(cloneRequest(request), {
+            setInfoRequest(Object.assign(cloneRequest(() => new HistoryRequest(request.idContact), request), {
                 pagination: Object.assign(new Pagination(), resp.data.pagination)
             }))
         } catch (error) {
@@ -64,7 +59,7 @@ export default function ChatHistoryPage(){
         setLoadingMore(true)
         prevScrollHeightRef.current = containerRef.current?.scrollHeight ?? null;
         try {
-            const request = cloneRequest(infoRequest)
+            const request = cloneRequest(() => new HistoryRequest(infoRequest.idContact), infoRequest)
             request.pagination.page = pagination.page + 1
             const resp: HistoryResponse = await chatService.history(request);
             if(!resp.success || !resp.data){
@@ -72,7 +67,7 @@ export default function ChatHistoryPage(){
             }
             const olderMessages = [...resp.data.messages].reverse()
             setMessages((current) => [...olderMessages, ...current])
-            setInfoRequest(Object.assign(cloneRequest(request), {
+            setInfoRequest(Object.assign(cloneRequest(() => new HistoryRequest(request.idContact), request), {
                 pagination: Object.assign(new Pagination(), resp.data.pagination)
             }))
         } finally {

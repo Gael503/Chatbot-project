@@ -73,16 +73,19 @@ form (InputText + ButtonsForm) ──▶ TableUsers.tsx ──▶ userService.se
    first generic argument for both `createColumnHelper` and `ColumnDef`.
 
 4. **`features/<Feature>/pages/Table<Feature>.tsx`** — the page itself. Copy
-   `TableUsers.tsx` and adjust the four feature-specific spots:
-   - the `cloneRequest` helper (same shape, just retyped to your request class)
+   `TableUsers.tsx` and adjust the three feature-specific spots:
+   - a one-line `const newRequest = () => new productSearchRequest()` factory
+     (passed into the shared pagination helpers — see below)
    - the fields read out of `formValues` inside `handleSearch`
    - the `InputText` fields rendered in the filter form
    - `columns={productColumns}` / `data={products}` passed to `<DataTable />`
 
    Everything else — `searchUsers`-equivalent, `useEffect` initial load,
-   `handlePageChange`, `handleSizeChange`, the `<DataTable pagination={...}>`
+   `onPageChange`/`onSizeChange` wiring, the `<DataTable pagination={...}>`
    prop wiring — is boilerplate, not feature logic. Don't improvise a
-   different shape for it.
+   different shape for it, and don't redefine `cloneRequest`/
+   `handlePageChange`/`handleSizeChange` locally — import them from
+   `components/utils/pagination.ts` (see below).
 
 5. **Backend validator** — `backend/src/modules/<feature>/dto/<entity>.schema.ts`
    using express-validator, mirroring `user.schema.ts`'s `UserSearchSchema`:
@@ -94,13 +97,27 @@ form (InputText + ButtonsForm) ──▶ TableUsers.tsx ──▶ userService.se
 
 ## The parts worth understanding, not just copying
 
-**`cloneRequest` exists because the request objects are class instances, not
-plain objects.** `useForm`/React state updates need a new object each time,
+**`cloneRequest`/`handlePageChange`/`handleSizeChange` are shared generics,
+not per-feature code.** They live in `components/utils/pagination.ts` and
+used to be copy-pasted (with a retyped `new RequestClass()`) into every
+feature page — `PromptListDialog.tsx`, `TableUsers.tsx`, `ChatsHome.tsx`,
+`ChatHistory.tsx` all had identical copies. They're now generic over any
+request shaped `{ pagination: Pagination }` and take a `factory: () => T`
+instead of hardcoding the class, so the same function works for classes with
+a no-arg constructor (`productSearchRequest`) and ones that need constructor
+args (`HistoryRequest(idContact)`). A feature page only supplies the factory:
+```ts
+const newRequest = () => new productSearchRequest()
+const onPageChange = (page: number) => handlePageChange(newRequest, infoRequest, page, searchProducts)
+const onSizeChange = (size: number) => handleSizeChange(newRequest, infoRequest, size, searchProducts)
+```
+`cloneRequest` exists because the request objects are class instances, not
+plain objects — `useForm`/React state updates need a new object each time,
 but `Object.assign({}, request)` would strip the class prototype (losing
 `Pagination`'s `offset` getter and `calculate()` method) and leave the nested
-`pagination` field aliased to the old object. The pattern is always:
+`pagination` field aliased to the old object. Internally it always does:
 ```ts
-const next = Object.assign(new RequestClass(), request)
+const next = Object.assign(factory(), request)
 next.pagination = Object.assign(new Pagination(), request.pagination)
 ```
 
@@ -144,6 +161,7 @@ over from a previous iteration of this pattern.
 | Piece | Location | Notes |
 |---|---|---|
 | `Pagination` | `shared/Pagination.ts` | `page`, `size`, `total`, `totalPages`, `.offset` getter, `.calculate()` |
+| `cloneRequest`, `handlePageChange`, `handleSizeChange` | `components/utils/pagination.ts` | generic over any `{ pagination: Pagination }` request; take a `factory: () => T` arg so they work with both no-arg and constructor-arg request classes |
 | `BaseResponse<T>` | `shared/BaseResponse.ts` | `{ code, message, success, data? }` envelope every `*Response` extends |
 | `DataTable` | `components/ui/data-table.tsx` | TanStack Table v9 wrapper; renders rows + pager from the `pagination` prop |
 | `DataTableFeatures` | `components/table-features.ts` | first generic arg for `ColumnDef`/`createColumnHelper` |

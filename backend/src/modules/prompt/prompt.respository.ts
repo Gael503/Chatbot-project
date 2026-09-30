@@ -71,7 +71,7 @@ export const newVersion = async (payload: CreatePromptRequest): Promise<promptDa
     }
 }
 
-export const activatePrompt = async (promptId: number): Promise<string> => {
+export const activatePrompt = async (promptId: number): Promise<number> => {
     try {
         const resp = await pg.executeTransaction(
             async (client) => {
@@ -80,7 +80,7 @@ export const activatePrompt = async (promptId: number): Promise<string> => {
                 return result;
             }
         );
-        return resp.rows[0].id
+        return resp.rows[0].id ?? 0
 
     } catch (error) {
         logger.error({ error }, "Error activating prompt");

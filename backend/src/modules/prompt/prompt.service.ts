@@ -82,13 +82,11 @@ class PromptService{
         }
     }
 
-    async activate(promptId: number): Promise<BaseResponse<{promptId: string}>> {
+    async activate(promptId: number): Promise<BaseResponse<{promptId: number}>> {
         WriteInitService("PromptService - " + this.activate.name);
-        logger.info("Aqui!")
-        logger.info(promptId)
-        let response = new BaseResponse<{promptId: string}>();
+        let response = new BaseResponse<{promptId: number}>();
         try {
-            const activated: string = await activatePrompt(promptId);
+            const activated: number = await activatePrompt(promptId);
 
             if (!activated) {
                 response.setErrorResponse({
@@ -100,7 +98,7 @@ class PromptService{
 
             response.setSuccessResponse({
                 message: "Prompt activado correctamente",
-                data: { promptId }
+                data: { promptId: activated }
             });
 
             return response;

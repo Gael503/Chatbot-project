@@ -6,12 +6,9 @@ import CardContact from "../components/CardContact";
 import { Loader } from "@/components/ui/loader";
 import { PaginationControls } from "@/components/ui/pagination-controls";
 import Pagination from "@/shared/Pagination";
+import { cloneRequest, handlePageChange, handleSizeChange } from "@/components/utils/pagination"
 
-function cloneRequest(request: ContactsRequest): ContactsRequest {
-    const next = Object.assign(new ContactsRequest(), request)
-    next.pagination = Object.assign(new Pagination(), request.pagination)
-    return next
-}
+const newRequest = () => new ContactsRequest()
 
 export default function ChatsHome(){
     const [loading, setLoading] = useState<boolean>(true);
@@ -29,7 +26,7 @@ export default function ChatsHome(){
                 return;
             }
             setContacts(resp.data.contacts)
-            const nextRequest = cloneRequest(request)
+            const nextRequest = cloneRequest(newRequest, request)
             nextRequest.pagination = Object.assign(new Pagination(), resp.data.pagination)
             setInfoRequest(nextRequest)
         } catch (error) {
@@ -43,18 +40,8 @@ export default function ChatsHome(){
         searchContacts(defaultValues);
     },[])
 
-    const handlePageChange = (page: number) => {
-        const request = cloneRequest(infoRequest)
-        request.pagination.page = page
-        searchContacts(request)
-    }
-
-    const handleSizeChange = (size: number) => {
-        const request = cloneRequest(infoRequest)
-        request.pagination.size = size
-        request.pagination.page = 1
-        searchContacts(request)
-    }
+    const onPageChange = (page: number) => handlePageChange(newRequest, infoRequest, page, searchContacts)
+    const onSizeChange = (size: number) => handleSizeChange(newRequest, infoRequest, size, searchContacts)
 
     return (
         <div className="">
@@ -77,8 +64,8 @@ export default function ChatsHome(){
                                     size: infoRequest.pagination.size,
                                     totalPages: infoRequest.pagination.totalPages,
                                     totalRecords: infoRequest.pagination.total,
-                                    onPageChange: handlePageChange,
-                                    onSizeChange: handleSizeChange,
+                                    onPageChange,
+                                    onSizeChange,
                                     loading,
                                 }}
                             />
