@@ -6,7 +6,6 @@ class UserService{
         let response = new userSearchResponse();
         try {
             const resp = await api.post("/users/search", payload)
-            console.log(resp);
             response = resp.data;
             return response;
         } catch (error) {

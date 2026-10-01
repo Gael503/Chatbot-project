@@ -3,12 +3,15 @@ import { useEffect, useState } from "react"
 import { userSearchRequest, User } from "@/services/users/classes/user"
 import { userService } from "@/services"
 import { DataTable } from "@/components/ui/data-table"
-import { userColumns } from "../components/UserColumns"
+import { getUserColumns } from "../components/UserColumns"
 import Pagination from "@/shared/Pagination"
 import { useForm } from "react-hook-form"
 import { InputText } from "@/components/forms/customField"
 import ButtonsForm from "@/components/forms/buttonsForm"
 import { cloneRequest, handlePageChange, handleSizeChange } from "@/components/utils/pagination"
+import { useTranslations } from "next-intl"
+import { Loader } from "@/components/ui/loader"
+import NotFound from "@/components/ui/notFound"
 
 const newRequest = () => new userSearchRequest()
 
@@ -18,20 +21,22 @@ export default function TableUsers(){
     const [loading, setLoading] = useState(false);
     const defaultValues = new userSearchRequest();
     const { control, setValue, handleSubmit, formState: { errors } } = useForm<userSearchRequest>({ defaultValues })
+    const t = useTranslations()
 
+    const columns = getUserColumns(t)
     const searchUsers = async (request: userSearchRequest) => {
         setLoading(true)
         try {
             const response = await userService.search(request)
-            if (response.success && response.data) {
-                setUsers(response.data.users)
-                const nextRequest = cloneRequest(newRequest, request)
-                nextRequest.pagination = Object.assign(new Pagination(), response.data.pagination)
-                setInfoRequest(nextRequest)
-            } else {
+            if(!response.success || !response.data){
                 setUsers([])
                 setInfoRequest(request)
+                return;
             }
+            setUsers(response.data.users)
+            const nextRequest = cloneRequest(newRequest, request)
+            nextRequest.pagination = Object.assign(new Pagination(), response.data.pagination)
+            setInfoRequest(nextRequest)
         } catch (error) {
             setUsers([])
         } finally {
@@ -58,81 +63,98 @@ export default function TableUsers(){
 
     return (
         <div>
-            <div className="my-4 bg-gray-50 rounded-2xl p-3">
-                <p className="border-b-2 p-2 font-bold border-gray-400">Filtros</p>
-                <form onSubmit={handleSearch}>
-                    <div className="flex m-2">
-                        <InputText 
-                            control={control}
-                            fieldInfo={{
-                                id: "filter-id",
-                                labeltext: "Id",
-                                name: "id",
-                                placeholder: "userId",
-                                type: "text",
-                                minlength: 0,
-                                maxlength: 5,
-                                requeried: false,
-                                disabled: false,
-                                className: "mx-2 w-3xs"
-                            }}
-                            setValue={setValue}
-                            errors={errors}
-                        />
-                        <InputText 
-                            control={control}
-                            fieldInfo={{
-                                id: "name",
-                                labeltext: "Nombre de usuario",
-                                name: "name",
-                                placeholder: "user...",
-                                type: "text",
-                                minlength: 0,
-                                maxlength: 20,
-                                requeried: false,
-                                disabled: false,
-                                className: "mx-2 w-3xs"
-                            }}
-                            setValue={setValue}
-                            errors={errors}
-                        />
-                        <InputText 
-                            control={control}
-                            fieldInfo={{
-                                id: "email",
-                                labeltext: "Email",
-                                name: "email",
-                                placeholder: "user@gmail.com",
-                                type: "text",
-                                minlength: 0,
-                                maxlength: 30,
-                                requeried: false,
-                                disabled: false,
-                                className: "mx-2 w-3xs"
-                            }}
-                            setValue={setValue}
-                            errors={errors}
-                        />
+            {
+                loading && <Loader />
+            }
+            {
+                !loading && (
+                    <div>
+                        <div className="my-4 bg-gray-50 rounded-2xl p-3">
+                            <p className="font-bold">{t("users.title")}</p>
+                        </div>
+                        {
+                            users.length ? (
+                                <>
+                                    <div className="my-4 bg-gray-50 rounded-2xl p-3">
+                                        <p className="border-b-2 p-2 font-bold border-gray-400">Filtros</p>
+                                        <form onSubmit={handleSearch}>
+                                            <div className="flex m-2">
+                                                <InputText 
+                                                    control={control}
+                                                    fieldInfo={{
+                                                        id: "filter-id",
+                                                        labeltext: "Id",
+                                                        name: "id",
+                                                        placeholder: "userId",
+                                                        type: "text",
+                                                        minlength: 0,
+                                                        maxlength: 5,
+                                                        requeried: false,
+                                                        disabled: false,
+                                                        className: "mx-2 w-3xs"
+                                                    }}
+                                                    setValue={setValue}
+                                                    errors={errors}
+                                                />
+                                                <InputText 
+                                                    control={control}
+                                                    fieldInfo={{
+                                                        id: "name",
+                                                        labeltext: "Nombre de usuario",
+                                                        name: "name",
+                                                        placeholder: "user...",
+                                                        type: "text",
+                                                        minlength: 0,
+                                                        maxlength: 20,
+                                                        requeried: false,
+                                                        disabled: false,
+                                                        className: "mx-2 w-3xs"
+                                                    }}
+                                                    setValue={setValue}
+                                                    errors={errors}
+                                                />
+                                                <InputText 
+                                                    control={control}
+                                                    fieldInfo={{
+                                                        id: "email",
+                                                        labeltext: "Email",
+                                                        name: "email",
+                                                        placeholder: "user@gmail.com",
+                                                        type: "text",
+                                                        minlength: 0,
+                                                        maxlength: 30,
+                                                        requeried: false,
+                                                        disabled: false,
+                                                        className: "mx-2 w-3xs"
+                                                    }}
+                                                    setValue={setValue}
+                                                    errors={errors}
+                                                />
+                                            </div>
+                                            <div className="w-1/4 flex m-auto">
+                                                <ButtonsForm submit_label="Buscar..."/>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <DataTable
+                                        columns={columns}
+                                        data={users}
+                                        pagination={{
+                                            page: infoRequest.pagination.page,
+                                            size: infoRequest.pagination.size,
+                                            totalPages: infoRequest.pagination.totalPages,
+                                            totalRecords: infoRequest.pagination.total,
+                                            onPageChange,
+                                            onSizeChange,
+                                            loading,
+                                        }}
+                                    />
+                                </>
+                            ) : <NotFound message={t('users.messages.not_found')}/>
+                        }
                     </div>
-                    <div className="w-1/4 flex m-auto">
-                        <ButtonsForm submit_label="Buscar..."/>
-                    </div>
-                </form>
-            </div>
-
-            <DataTable
-                columns={userColumns}
-                data={users}
-                pagination={{
-                    page: infoRequest.pagination.page,
-                    size: infoRequest.pagination.size,
-                    totalPages: infoRequest.pagination.totalPages,
-                    totalRecords: infoRequest.pagination.total,
-                    onPageChange,
-                    onSizeChange,
-                    loading,
-                }}
-            />
+                )
+            }
         </div>
     )
 }

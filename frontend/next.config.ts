@@ -8,10 +8,13 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  devIndicators: false,
+  devIndicators:{ 
+    position: "bottom-right"
+  },
   turbopack: {
     root: path.join(__dirname, '..'),
   },
+  reactStrictMode: false
 };
 
 export default withNextIntl(nextConfig);

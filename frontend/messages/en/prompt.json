@@ -1,0 +1,17 @@
+{
+    "title": "Prompts panel",
+    "prompt": {
+        "version": "N° version",
+        "created_by": "Created by",
+        "is_active": "Active",
+        "created_at": "Created at"
+    },
+    "messages": {
+        "not_found_list": "Prompts not found"
+    },
+    "new_prompt": "New prompt",
+    "new_prompt_description": "Drag a .txt file here or click to select it.",
+    "instructions": "Instructions",
+    "current_version": "Current Version",
+    "confirm_activate": "Confirm if you want activate the prompt"
+}

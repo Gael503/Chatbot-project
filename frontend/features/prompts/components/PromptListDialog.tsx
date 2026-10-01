@@ -16,6 +16,9 @@ import { Button } from "@/components/ui/button"
 import { cloneRequest, handlePageChange, handleSizeChange } from "@/components/utils/pagination"
 import { getPromptColumns } from "./PromptColumns"
 import { PromptContainer } from "./PromptContainer"
+import { useTranslations } from "next-intl"
+import NotFound from "@/components/ui/notFound"
+import { Loader } from "@/components/ui/loader"
 
 const newRequest = () => new PromptsListRequest()
 
@@ -23,6 +26,7 @@ type DialogMode = "view" | "activate" | null
 
 export default function PromptListDialog(props: { onUpdate: () => void }) {
     const { onUpdate } = props;
+    const t = useTranslations();
     const [loading, setLoading] = useState(false)
     const [prompts, setPrompts] = useState<promptData[]>([])
     const [infoRequest, setInfoRequest] = useState<PromptsListRequest>(new PromptsListRequest())
@@ -85,7 +89,8 @@ export default function PromptListDialog(props: { onUpdate: () => void }) {
 
     const columns = getPromptColumns({
         onView: handleView,
-        turnOn: handleActivePrompt
+        turnOn: handleActivePrompt,
+        t: t
     }
     )
     useEffect(() =>{
@@ -94,45 +99,56 @@ export default function PromptListDialog(props: { onUpdate: () => void }) {
 
     return (
         <div>
-            <DataTable
-                columns={columns}
-                data={prompts}
-                pagination={{
-                    page: infoRequest.pagination.page,
-                    size: infoRequest.pagination.size,
-                    totalPages: infoRequest.pagination.totalPages,
-                    totalRecords: infoRequest.pagination.total,
-                    onPageChange,
-                    onSizeChange,
-                    loading,
-                }}
-            />
+            {
+                loading && <Loader />
+            }
+            {
+                !loading && (
+                    prompts.length ? (
+                        <div>
+                            <DataTable
+                                columns={columns}
+                                data={prompts}
+                                pagination={{
+                                    page: infoRequest.pagination.page,
+                                    size: infoRequest.pagination.size,
+                                    totalPages: infoRequest.pagination.totalPages,
+                                    totalRecords: infoRequest.pagination.total,
+                                    onPageChange,
+                                    onSizeChange,
+                                    loading,
+                                }}
+                            />
 
-            <Dialog open={dialogMode === "view"} onOpenChange={(next) => !next && closeDialog()}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Prompt v{selectedPrompt?.version_num}</DialogTitle>
-                    </DialogHeader>
-                    {selectedPrompt && <PromptContainer {...selectedPrompt} />}
-                </DialogContent>
-            </Dialog>
+                            <Dialog open={dialogMode === "view"} onOpenChange={(next) => !next && closeDialog()}>
+                                <DialogContent>
+                                    <DialogHeader>
+                                        <DialogTitle>Prompt v{selectedPrompt?.version_num}</DialogTitle>
+                                    </DialogHeader>
+                                    {selectedPrompt && <PromptContainer {...selectedPrompt} />}
+                                </DialogContent>
+                            </Dialog>
 
-            <Dialog open={dialogMode === "activate"} onOpenChange={(next) => !next && closeDialog()}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Prompt v{selectedPrompt?.version_num}</DialogTitle>
-                    </DialogHeader>
-                    <p>Confirma si deseas activar este prompt</p>
-                    <div className="mt-4 flex justify-end gap-2">
-                        <Button variant="outline" size="sm" onClick={closeDialog} disabled={activating}>
-                            Cancelar
-                        </Button>
-                        <Button size="sm" onClick={confirmActivate} disabled={activating}>
-                            {activating ? "Activando..." : "Activar"}
-                        </Button>
-                    </div>
-                </DialogContent>
-            </Dialog>
+                            <Dialog open={dialogMode === "activate"} onOpenChange={(next) => !next && closeDialog()}>
+                                <DialogContent>
+                                    <DialogHeader>
+                                        <DialogTitle>Prompt v{selectedPrompt?.version_num}</DialogTitle>
+                                    </DialogHeader>
+                                    <p>{ t('prompt.confirm_activate') }</p>
+                                    <div className="mt-4 flex justify-end gap-2">
+                                        <Button variant="cancel" size="sm" onClick={closeDialog} disabled={activating}>
+                                            { t('common.cancel') }
+                                        </Button>
+                                        <Button variant="confirm" size="sm" onClick={confirmActivate} disabled={activating}>
+                                            {activating ? t('common.activating') : t('common.activate')}
+                                        </Button>
+                                    </div>
+                                </DialogContent>
+                            </Dialog>
+                        </div>
+                    ) : <NotFound message={t('prompt.messages.not_found_list')}/>
+                )
+            }
         </div>
     )
 }

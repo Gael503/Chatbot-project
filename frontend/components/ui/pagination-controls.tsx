@@ -54,7 +54,7 @@ export function PaginationControls({ pagination }: { pagination: DataTablePagina
 
     return (
         <div className="flex items-center justify-between gap-4 p-2">
-            <p className="text-md font-bold">
+            <p className="text-sm font-bold">
                 {t('forms.pagination.records', {
                     first: pagination.page,
                     last: pagination.size,
@@ -62,7 +62,7 @@ export function PaginationControls({ pagination }: { pagination: DataTablePagina
                 })}
             </p>
             <div className="flex items-center gap-2 text-sm text-muted-foreground m-auto mr-0">
-                <span>{t("forms.pagination.rows")}</span>
+                <span className="font-bold">{t("forms.pagination.rows")}</span>
                 <Select
                     value={String(pagination.size)}
                     onValueChange={(value) => {

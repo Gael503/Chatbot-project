@@ -1,0 +1,17 @@
+{
+    "title": "Users list",
+    "user": {
+        "name": "Name",
+        "email": "Email",
+        "created_at": "Created at",
+        "updated_at": "Updated at",
+        "is_active": "Status",
+        "last_login": "Last login"
+    },
+    "messages": {
+        "created": "User created",
+        "updated": "User updated",
+        "get": "Users listed",
+        "not_found": "Users not found"
+    }
+}

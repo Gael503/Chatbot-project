@@ -4,10 +4,10 @@ export class User{
     id: number = 0;
     name: string = "";
     email: string = "";
-    created_at: Date = new Date();
-    updated_at: Date = new Date();
+    created_at: string = "";
+    updated_at: string = "";
     is_active: boolean = false;
-    last_login: Date = new Date();
+    last_login: string = "";
 }
 
 export class userCreateRequest{

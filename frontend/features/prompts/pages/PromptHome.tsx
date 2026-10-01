@@ -6,11 +6,13 @@ import { Loader } from "@/components/ui/loader";
 import { PromptContainer, PromptContainerEmpty } from "../components/PromptContainer";
 import PromptListDialog from "../components/PromptListDialog";
 import CreatePromptDialog from "../components/CreatePromptDialog";
+import { useTranslations } from "next-intl";
 
 export default function PromptHome(){
     const [loading, setLoading] = useState<boolean>(true);
     const [prompt, setPrompt] = useState<promptData>(new promptData())
     const [reload, setReload] = useState<number>(0)
+    const t = useTranslations();
     const getPrompt = async () =>{
         setLoading(true)
         try {
@@ -33,8 +35,13 @@ export default function PromptHome(){
 
     return(
         <div>
+            <div className="my-4 bg-gray-50 rounded-2xl p-3">
+                <p className="font-bold">{t("prompt.title")}</p>
+            </div>
             <div className="flex gap-2 justify-end">
-                <CreatePromptDialog onCreated={getPrompt}/>
+                <div className="mr-2">
+                    <CreatePromptDialog onCreated={getPrompt}/>
+                </div>
             </div>
             <div className="h-80">
                 {
@@ -53,9 +60,7 @@ export default function PromptHome(){
                     )
                 }
             </div>
-            <>
             <PromptListDialog onUpdate={handleUpdated}/>
-            </>
         </div>
     )
 }

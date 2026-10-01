@@ -1,0 +1,17 @@
+{
+    "title": "Panel de usuarios",
+    "user": {
+        "name": "Nombre",
+        "email": "Correo",
+        "created_at": "Creado",
+        "updated_at": "Actualizado",
+        "is_active": "Estatus",
+        "last_login": "Último login"
+    },
+    "messages": {
+        "created": "Usuario creado",
+        "updated": "Usuario actualizado",
+        "get": "Usuarios consultados",
+        "not_found": "Usuarios no encontrados"
+    }
+}

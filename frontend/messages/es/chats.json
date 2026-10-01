@@ -1,0 +1,9 @@
+{
+    "title": "Lista de contactos",
+    "messages": {
+        "contacts_not_found": "Contactos no encontrados",
+        "chat_not_found": "Historial no disponible"
+    },
+    "input_placeholder": "Escribe un mensaje",
+    "send": "Enviar"
+}

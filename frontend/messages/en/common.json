@@ -1,0 +1,18 @@
+{
+    "unknown": "Unknown",
+    "status_active ": "Active",
+    "status_inactive": "Inactive",
+    "actions": "Actions",
+    "save": "Save",
+    "saving": "Saving...",
+    "edit": "Edit",
+    "show": "Show",
+    "activate": "Activate",
+    "activating": "Activating...",
+    "cancel": "Cancel",
+    "created_at": "Created",
+    "updated_at": "Updated",
+    "created_at_date": "Created: {date}",
+    "updated_at_date": "Updated: {date}",
+    "not_found": "Resource not found. Please come back later."
+}

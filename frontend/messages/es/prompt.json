@@ -1,0 +1,17 @@
+{
+    "title": "Panel prompts",
+    "prompt": {
+        "version": "N° version",
+        "created_by": "Creado por",
+        "is_active": "Activo",
+        "created_at": "Creado"
+    },
+    "messages": {
+        "not_found_list": "Prompts no encontrados"
+    },
+    "new_prompt": "Nuevo prompt",
+    "new_prompt_description": "Arrastra un archivo .txt aquí o haz click para seleccionarlo.",
+    "instructions": "Instrucciones",
+    "current_version": "Version actual {number}",
+    "confirm_activate": "Confirma si deseas activar este prompt"
+}

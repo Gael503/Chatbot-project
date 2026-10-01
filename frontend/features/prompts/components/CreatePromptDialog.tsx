@@ -11,6 +11,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { CreatePromptDialogProps } from "../interfaces"
+import { useTranslations } from "next-intl"
 
 export default function CreatePromptDialog({ onCreated }: CreatePromptDialogProps) {
     const [open, setOpen] = useState(false)
@@ -18,6 +19,7 @@ export default function CreatePromptDialog({ onCreated }: CreatePromptDialogProp
     const [file, setFile] = useState<File | null>(null)
     const [error, setError] = useState<string>("")
     const [submitting, setSubmitting] = useState(false)
+    const t = useTranslations();
     const inputRef = useRef<HTMLInputElement>(null)
 
     const reset = () => {
@@ -82,12 +84,12 @@ export default function CreatePromptDialog({ onCreated }: CreatePromptDialogProp
 
     return (
         <Dialog open={open} onOpenChange={handleOpenChange}>
-            <DialogTrigger render={<Button className="bg-blue-600 text-white"/>}>
-                Crear nuevo prompt
+            <DialogTrigger render={<Button className="bg-blue-600 text-white cursor-pointer"/>}>
+                { t('prompt.new_prompt') }
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Crear nuevo prompt</DialogTitle>
+                    <DialogTitle>{ t('prompt.new_prompt') }</DialogTitle>
                 </DialogHeader>
 
                 <div
@@ -109,7 +111,7 @@ export default function CreatePromptDialog({ onCreated }: CreatePromptDialogProp
                         <p className="font-medium">{file.name}</p>
                     ) : (
                         <p className="text-gray-500">
-                            Arrastra un archivo .txt aquí o haz click para seleccionarlo
+                            { t('prompt.new_prompt_description') }
                         </p>
                     )}
                 </div>
@@ -118,7 +120,7 @@ export default function CreatePromptDialog({ onCreated }: CreatePromptDialogProp
 
                 <div className="flex justify-end mt-4">
                     <Button onClick={handleSubmit} disabled={submitting || !file}>
-                        {submitting ? "Guardando..." : "Guardar"}
+                        {submitting ? t('common.saving') : t('common.save')}
                     </Button>
                 </div>
             </DialogContent>

@@ -9,28 +9,37 @@ import { ColumsPrompts } from "../interfaces"
 const columnHelper = createColumnHelper<DataTableFeatures, promptData>()
 
 export function getPromptColumns(props: ColumsPrompts) {
-    const { onView, turnOn } = props;
+    const { onView, turnOn, t } = props;
     return columnHelper.columns([
-        columnHelper.accessor("id", {
-            header: "Id"
-        }),
+        // columnHelper.accessor("id", {
+        //     header: "Id"
+        // }),
         columnHelper.accessor("version_num", {
-            header: "Version"
+            header: t('prompt.prompt.version')
         }),
         columnHelper.accessor("created_by", {
-            header: "Creado por"
+            header: t('prompt.prompt.created_by')
         }),
         columnHelper.accessor("is_active", {
-            header: "Activo",
-            cell: (info) => (info.getValue() ? "Si" : "No"),
+            header: t('prompt.prompt.is_active'),
+            cell: (info) => (
+                <div className="max-w-30 m-auto">
+                    <p className={`p-2 border ${info.getValue() ? "border-green-300" : "border-red-500" } rounded-2xl font-bold text-center`}>
+                        {
+                        info.getValue()
+                        ? t("common.status_active")
+                        : t("common.status_inactive")
+                        }
+                    </p>
+                </div>
+            )
         }),
         columnHelper.accessor("created_at", {
-            header: "Creado",
+            header: t('prompt.prompt.created_at'),
             cell: (info) => formatDate(info.getValue())
         }),
         columnHelper.display({
-            id: "actions",
-            header: "Acciones",
+            header: t('common.actions'),
             cell: (info) => (
                 <div className="w-2 flex">
                     <Button
@@ -39,7 +48,7 @@ export function getPromptColumns(props: ColumsPrompts) {
                         className="bg-green-200 mx-2 font-bold"
                         onClick={() => onView(info.row.original)}
                     >
-                        Ver
+                        { t('common.show') }
                     </Button>
                     <Button
                         variant="outline"
@@ -47,7 +56,7 @@ export function getPromptColumns(props: ColumsPrompts) {
                         className="bg-blue-200 mx-2 font-bold"
                         onClick={() => turnOn(info.row.original)}
                     >
-                        Activar prompt
+                        { t('common.activate') }
                     </Button>
                 </div>
             )

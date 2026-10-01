@@ -21,7 +21,7 @@ export function LoaderPage(){
 //cargador generico v1
 export function Loader(props : {className?: string, width?: number, height?: number}){
     return(
-        <div className={`grid m-auto ${props.className}`}>
+        <div className={`flex m-auto justify-center ${props.className}`}>
             <ThreeDots
             visible={true}
             height={props.height ? props.height : "80"}

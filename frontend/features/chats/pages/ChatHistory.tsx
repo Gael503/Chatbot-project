@@ -12,6 +12,7 @@ import { Loader } from "@/components/ui/loader"
 import Pagination from "@/shared/Pagination"
 import { Button } from "@base-ui/react/button"
 import { cloneRequest } from "@/components/utils/pagination"
+import NotFound from "@/components/ui/notFound"
 
 const SCROLL_TOP_THRESHOLD = 40;
 
@@ -35,10 +36,7 @@ export default function ChatHistoryPage(){
         setLoading(true)
         try {
             const resp: HistoryResponse = await chatService.history(request);
-            if(!resp.success || !resp.data){
-                console.log("Contactos no disponibles");
-                return;
-            }
+            if(!resp.success || !resp.data) return;
             scrollToBottomRef.current = true;
             setMessages([...resp.data.messages].reverse())
             setPhone(resp.data.phone || "Unknow")
@@ -126,7 +124,7 @@ export default function ChatHistoryPage(){
                             messages.map((message, index) =>{
                                 return message.response_from === "User" ? <UserMessage key={index} {...message} /> : <BotMessage key={index} {...message}/>
                             })
-                        ) : <p> Mensajes no disponibles</p>
+                        ) : <NotFound message=""/>
                     )
                 }
             </div>
