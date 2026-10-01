@@ -20,7 +20,7 @@ export default function TableUsers(){
     const [infoRequest, setInfoRequest] = useState<userSearchRequest>(new userSearchRequest())
     const [loading, setLoading] = useState(false);
     const defaultValues = new userSearchRequest();
-    const { control, setValue, handleSubmit, formState: { errors } } = useForm<userSearchRequest>({ defaultValues })
+    const { control, setValue, handleSubmit, reset, formState: { errors } } = useForm<userSearchRequest>({ defaultValues })
     const t = useTranslations()
 
     const columns = getUserColumns(t)
@@ -57,6 +57,11 @@ export default function TableUsers(){
         request.pagination.page = 1
         searchUsers(request)
     })
+
+    const handleClean = () => {
+        reset()
+        searchUsers(defaultValues)
+    }
 
     const onPageChange = (page: number) => handlePageChange(newRequest, infoRequest, page, searchUsers)
     const onSizeChange = (size: number) => handleSizeChange(newRequest, infoRequest, size, searchUsers)
@@ -132,7 +137,7 @@ export default function TableUsers(){
                                                 />
                                             </div>
                                             <div className="w-1/4 flex m-auto">
-                                                <ButtonsForm submit_label="Buscar..."/>
+                                                <ButtonsForm submit_label="Buscar..." onClean={handleClean}/>
                                             </div>
                                         </form>
                                     </div>

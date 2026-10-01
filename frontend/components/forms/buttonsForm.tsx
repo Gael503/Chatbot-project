@@ -4,13 +4,14 @@ import { IButtonsForm } from "./interfaces/buttonsForm"
 import { useTranslations } from "next-intl"
 
 export default function ButtonsForm(props: IButtonsForm){
-    const { clean_label, submit_label, disable } = props;
+    const { clean_label, submit_label, disable, onClean } = props;
     const t = useTranslations();
     return(
         <div className="w-full flex bg-none">
             <Button
                 variant="default"
-                type="reset"
+                type="button"
+                onClick={onClean}
                 className="w-1/2 border-2 bg-red-400 hover:bg-blue-900 flex m-auto p-4 text-white cursor-pointer"
                 disabled={disable}
             >

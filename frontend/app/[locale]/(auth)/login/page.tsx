@@ -15,7 +15,7 @@ export default function LoginPage() {
     email: "",
     password: ""
   }
-  const { control, setValue, handleSubmit, formState: { errors } } = useForm<LoginForm>({ defaultValues })
+  const { control, setValue, handleSubmit, reset, formState: { errors } } = useForm<LoginForm>({ defaultValues })
   const t = useTranslations();
   const [disabled, setDisabled] = useState<boolean>(false);
   const router = useRouter();
@@ -104,7 +104,7 @@ export default function LoginPage() {
                 setValue={setValue}
                 key="password"
               />
-              <ButtonsForm disable={disabled}/>
+              <ButtonsForm disable={disabled} onClean={() => reset()}/>
             </form>
 
           </div>
