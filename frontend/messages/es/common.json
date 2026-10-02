@@ -14,5 +14,6 @@
     "updated_at": "Actualizado",
     "created_at_date": "Creado: {date}",
     "updated_at_date": "Actualizado: {date}",
-    "not_found": "Recurso no encontrado, por favor intenta más tarde."
+    "not_found": "Recurso no encontrado, por favor intenta más tarde.",
+    "service_fail": "No fue posible conectar con el servicio."
 }

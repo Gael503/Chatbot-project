@@ -1,0 +1,14 @@
+{
+    "status": {
+        "inactive": "Inactive",
+        "initializing": "Started",
+        "qr_pending": "Waiting scan the QR",
+        "connected": "Conected",
+        "auth_failure": "Auth faild"
+    },
+    "card_status": {
+        "status": "Bot status",
+        "phone": "Phone: {phone}",
+        "updated": "Updated: {date}"
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "status": {
+        "inactive": "Inactivo",
+        "initializing": "Inicializado",
+        "qr_pending": "Esperando escaneo de qr",
+        "connected": "Conectado",
+        "auth_failure": "Autenticacion fallida"
+    },
+    "card_status": {
+        "status": "Estado del bot",
+        "phone": "Teléfono: {phone}",
+        "updated": "Actualización: {date}"
+    }
+}

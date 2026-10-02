@@ -14,5 +14,6 @@
     "updated_at": "Updated",
     "created_at_date": "Created: {date}",
     "updated_at_date": "Updated: {date}",
-    "not_found": "Resource not found. Please come back later."
+    "not_found": "Resource not found. Please come back later.",
+    "service_fail": "Cannot conect with the service"
 }
