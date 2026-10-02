@@ -24,5 +24,5 @@ app.use("/api", routes)
 app.listen(port, () =>{
     logger.info("Server running on " +  port)
     connpg.connect();
-    // main();
+    main();
 })

@@ -4,3 +4,8 @@ import NodeCache from "node-cache";
 export const cache = new NodeCache({
     stdTTL: Number(config.get("api.cache_time")) || 180
 });
+
+export const promptCache = new NodeCache({
+    stdTTL: 300,
+    checkperiod: 60
+});

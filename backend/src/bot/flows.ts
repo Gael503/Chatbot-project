@@ -3,7 +3,7 @@ import { BaileysProvider as Provider } from '@builderbot/provider-baileys'
 import { PostgreSQLAdapter as Database } from '@builderbot/database-postgres'
 import IAservices from './services'
 import { ChatMessage } from 'types';
-import { MyPrompt } from './prompt';
+import { promptService } from '~/modules/prompt/prompt.service';
 export class Flows {
     private iaService = new IAservices();
 
@@ -24,11 +24,11 @@ export class Flows {
             // apartir de aqui los siguientes mensajes seran interpretados por la ia
             { capture: true },
             async (ctx, { fallBack }) => {
-
+                const prompt = await promptService.getCurrentContent();
                 const stream = await this.askIA([
                     {
                         role: 'system',
-                        content: MyPrompt
+                        content: prompt
                     },
                     {
                         role: 'user',

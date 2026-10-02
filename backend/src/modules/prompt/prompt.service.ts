@@ -1,9 +1,10 @@
-import { ResponseProps, BaseResponse, WriteInitService, WriteEndService, HandleErrors, Pagination } from "~/shared";
+import { BaseResponse, WriteInitService, WriteEndService, HandleErrors, Pagination } from "~/shared";
 import { CreatePromptRequest, PromptResponse, PromptsListRequest, PromptsListResponse } from "./dto/prompt";
 import { getPrompt, getAllPrompts, newVersion, activatePrompt } from "./prompt.respository";
-import { Http_codes } from "~/utils/Constants";
-import logger from "~/lib/logger";
 import { internal_process } from "../interfaces";
+import { MissingPrompt } from "./utils/promptBase";
+import { promptCache } from "../cache/cache";
+const CURRENT_PROMPT_KEY = 'current_prompt';
 class PromptService{
 
     async current(): Promise<PromptResponse>{
@@ -100,6 +101,8 @@ class PromptService{
                 message: "Prompt activado correctamente",
                 data: { promptId: activated }
             });
+            //se borra cache si existe en caso de activar el nuevo prompt
+            promptCache.del(CURRENT_PROMPT_KEY);
 
             return response;
 
@@ -109,6 +112,21 @@ class PromptService{
         } finally {
             WriteEndService("PromptService - " + this.activate.name, response);
         }
+    }
+
+    //funcion que regresa el promptActual usando cache
+    async getCurrentContent(): Promise<string> {
+        const cachedPrompt = promptCache.get<string>(CURRENT_PROMPT_KEY);
+
+        if (cachedPrompt) return cachedPrompt;
+
+        const response = await this.current();
+        if (!response.success) return MissingPrompt;
+
+        const content = response.data.prompt.content;
+        promptCache.set(CURRENT_PROMPT_KEY, content);
+
+        return content;
     }
 }
 
