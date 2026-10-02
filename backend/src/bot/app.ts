@@ -7,6 +7,7 @@ import PostgreSQLConn from "~/database/posgresql"
 import BotStatus from "./status"
 import logger from "~/lib/logger"
 const PORT = process.env.PORT ?? 3008
+import { broadcast } from "~/websocket/websocket.server"
 
 export const main = async () => {
     const botStatus = BotStatus.getInstance();
@@ -26,10 +27,16 @@ export const main = async () => {
     //maneja los status de conexion del qr
     adapterProvider.on("require_action", () => {
         logger.info("WhatsApp bot: QR pendiente de escanear")
+        broadcast({
+            type: "WHATSAPP_QR_UPDATED",
+        })
         botStatus.setState("qr_pending")
     })
     adapterProvider.on("ready", () => {
         logger.info("WhatsApp bot: conexion establecida")
+        broadcast({
+            type: "WHATSAPP_CONNECTED",
+        })
         botStatus.setState("connected")
     })
     adapterProvider.on("host", (host: Record<string, any>) => {

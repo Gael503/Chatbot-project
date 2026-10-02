@@ -7,6 +7,7 @@ import { ConectionData } from "@/services/whatsapp/classes";
 import getStatusData from "../utils/statusMap";
 import StatusBot from "../components/statusBot";
 import QrInstrucctions from "../components/Qr";
+import { useWebSocket } from "@/shared/hooks/useWebsockets";
 
 export default function QRBot(){
     const t = useTranslations();
@@ -52,14 +53,23 @@ export default function QRBot(){
     }
     useEffect(() =>{
         getQr();
-        getStatus();
         const interval = setInterval(() => {
             getQr();
             //refresca cada min
-        }, 1000 * 60);
+        }, 1000 * 30);
 
         return () => clearInterval(interval);
     },[])
+    useEffect(() =>{
+        getStatus();
+    },[])
+    useWebSocket((message) => {
+
+        if (message.type === "WHATSAPP_QR_UPDATED" || message.type === "WHATSAPP_CONNECTED") {
+            // getQr();
+            getStatus();
+        }
+    });
     return(
         <div className="flex flex-wrap">
             <QrInstrucctions image={image} loading={loading} status={connectionData.state}/>

@@ -7,6 +7,7 @@ import LoggerIncommingRequest from "./middleware/LoggerRequest";
 import routes from "./modules/router"
 import { ValidateToken } from "./middleware/ValidateToken";
 import cors from "cors"
+import { initWebSocket } from "./websocket/websocket.server";
 
 const app = express();
 const port = config.get("api.port")
@@ -21,8 +22,10 @@ app.use(ValidateToken)
 app.use(LoggerIncommingRequest)
 app.use("/api", routes)
 
-app.listen(port, () =>{
+const server = app.listen(port, () =>{
     logger.info("Server running on " +  port)
     connpg.connect();
     main();
 })
+
+initWebSocket(server)
