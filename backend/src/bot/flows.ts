@@ -22,28 +22,35 @@ export class Flows {
         .addAnswer(
             '¡Hola! Soy tu asistente de pruebas estoy listo para lo que necesites!',
             // apartir de aqui los siguientes mensajes seran interpretados por la ia
+            //Actualizacion agrego un try porque lo modelos gratuitos cambiaron y se rompieron.
             { capture: true },
             async (ctx, { fallBack }) => {
-                const prompt = await promptService.getCurrentContent();
-                const stream = await this.askIA([
-                    {
-                        role: 'system',
-                        content: prompt
-                    },
-                    {
-                        role: 'user',
-                        content: ctx.body
+                try {
+                    const prompt = await promptService.getCurrentContent();
+                    const stream = await this.askIA([
+                        {
+                            role: 'system',
+                            content: prompt
+                        },
+                        {
+                            role: 'user',
+                            content: ctx.body
+                        }
+                    ]);
+
+                    let answer = "";
+
+                    for await (const chunk of stream) {
+                        answer += chunk;
                     }
-                ]);
-
-                let answer = "";
-
-                for await (const chunk of stream) {
-                    answer += chunk;
+                    console.log("Respuesta de la IA?", answer);
+                    return await fallBack(answer);
+                } catch (error) {
+                    //regresamos un prompt de error y generamos un log de error para que quien este acargo de supervisar revise que paso.
+                    console.error("Error al generar respuesta: ", error);
+                    return await fallBack("Lo sentimos nuestro servicio, se encuentra disponible en estos momento, por favor intente más tarde.")
                 }
-
-                return await fallBack(answer);
             }
-        );
+        )
     }
 }

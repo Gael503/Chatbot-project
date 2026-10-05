@@ -15,7 +15,8 @@ export const groqService: AIServices = {
       "max_completion_tokens": 2048,
       "top_p": 1,
       "stream": true,
-      "stop": null
+      "stop": null,
+      "reasoning_effort": "medium",
   });
   // regresa la respuesta del modelo poco a poco
   return (async function* (){
