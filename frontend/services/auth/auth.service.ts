@@ -1,9 +1,9 @@
-import { LoginForm } from "@/components/forms/interfaces/login";
+import { LoginRequest } from "./classes";
 import { signIn, getSession, signOut } from "next-auth/react";
 import { Session } from "next-auth";
 
 class AuthService{
-    async login(payload: LoginForm): Promise<any>{
+    async login(payload: LoginRequest): Promise<any>{
         try {
             const existSession = await this.getCurrentSession();
             // session activa.
