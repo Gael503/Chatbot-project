@@ -10,11 +10,11 @@ export default function CardContact(props: ContactData){
     const router = useRouter();
     return(
         <div
-            className="w-48 max-h-38 rounded-2xl bg-gray-50 m-4 cursor-pointer hover:shadow-2xl hover:bg-gray-100"
+            className="w-48 max-h-38 rounded-2xl bg-gray-50 sm:my-10 md:m-auto xl:m-4 cursor-pointer hover:shadow-2xl hover:bg-gray-100"
             key={id}
             onClick={() => router.push(`/chats/${id}`)}
         >
-            <div className="relative -mt-10">
+            <div>
                 <ContactRoundIcon height={100} width={100} className="m-auto"/>
             </div>
             <div className="overflow-hidden h-full">

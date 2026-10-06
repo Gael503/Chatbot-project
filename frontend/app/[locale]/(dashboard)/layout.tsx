@@ -22,7 +22,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 onMobileClose={() => setIsMobileSidebarOpen(false)}
             />
 
-            <main className="flex-1 p-4 m-2 rounded-2xl border border-gray-200 min-w-0">
+            <main className="flex-1 p-4 m-2 rounded-2xl border border-gray-200 min-w-0 h-210 overflow-auto">
                 <Header onMenuClick={() => setIsMobileSidebarOpen(true)} />
                 {children}
             </main>

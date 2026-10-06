@@ -41,7 +41,7 @@ export function getPromptColumns(props: ColumsPrompts) {
         columnHelper.display({
             header: t('common.actions'),
             cell: (info) => (
-                <div className="w-2 flex">
+                <div>
                     <Button
                         variant="outline"
                         size="sm"

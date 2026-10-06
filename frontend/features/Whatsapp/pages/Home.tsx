@@ -56,22 +56,24 @@ export default function QRBot(){
         const interval = setInterval(() => {
             getQr();
             //refresca cada min
-        }, 1000 * 30);
+        }, 1000 * 60);
 
         return () => clearInterval(interval);
-    },[])
+    },[]);
+
     useEffect(() =>{
         getStatus();
-    },[])
+    },[]);
+
     useWebSocket((message) => {
 
         if (message.type === "WHATSAPP_QR_UPDATED" || message.type === "WHATSAPP_CONNECTED") {
-            // getQr();
+            getQr();
             getStatus();
         }
     });
     return(
-        <div className="flex flex-wrap">
+        <div className="flex flex-col xl:flex-row">
             <QrInstrucctions image={image} loading={loading} status={connectionData.state}/>
             <StatusBot
                 loading={statusLoading}

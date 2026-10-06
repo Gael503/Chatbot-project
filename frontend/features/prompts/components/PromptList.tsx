@@ -24,7 +24,7 @@ const newRequest = () => new PromptsListRequest()
 
 type DialogMode = "view" | "activate" | null
 
-export default function PromptListDialog(props: { onUpdate: () => void }) {
+export default function PromptList(props: { onUpdate: () => void }) {
     const { onUpdate } = props;
     const t = useTranslations();
     const [loading, setLoading] = useState(false)

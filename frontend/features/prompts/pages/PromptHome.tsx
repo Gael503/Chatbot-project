@@ -4,7 +4,7 @@ import { promptService } from "@/services";
 import { promptData } from "@/services/prompts/classes";
 import { Loader } from "@/components/ui/loader";
 import { PromptContainer, PromptContainerEmpty } from "../components/PromptContainer";
-import PromptListDialog from "../components/PromptListDialog";
+import PromptList from "../components/PromptList";
 import CreatePromptDialog from "../components/CreatePromptDialog";
 import { useTranslations } from "next-intl";
 
@@ -60,7 +60,7 @@ export default function PromptHome(){
                     )
                 }
             </div>
-            <PromptListDialog onUpdate={handleUpdated}/>
+            <PromptList onUpdate={handleUpdated}/>
         </div>
     )
 }

@@ -33,7 +33,7 @@ export default function getStatusData(
 
     return {
         text: t(`whatsapp.status.${status}`),
-        icon: <Icon width={150} height={150}/>,
+        icon: <Icon width={120} height={120}/>,
         border: statusClass[status]
     };
 }

@@ -60,9 +60,11 @@ export default function ChatsHome(){
                         {
                             contacts.length ? (
                                 <>
-                                    <div className="h-140 overflow-y-auto flex flex-wrap flex-3 pt-5">
+                                    <div className="h-140 overflow-y-auto flex flex-wrap">
                                         {contacts.map((contact, index) =>(
-                                            <CardContact key={index} id={contact.id} created_at={contact.created_at} phone={contact.phone}/>
+                                            <div className="m-auto my-10 xl:m-2" key={contact.id}>
+                                                <CardContact key={index} id={contact.id} created_at={contact.created_at} phone={contact.phone}/>
+                                            </div>
                                         ))}
                                     </div>
                                     <PaginationControls
