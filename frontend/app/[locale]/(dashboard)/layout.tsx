@@ -4,8 +4,10 @@ import Header from "@/components/layout/header";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useSessionGuard } from "@/shared/hooks/useSessionGuard";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+    useSessionGuard();
     const pathname = usePathname();
     const router = useRouter();
     const activeTab = pathname.split('/').filter(Boolean)[1] || 'conciliacion';

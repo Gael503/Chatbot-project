@@ -8,3 +8,11 @@ export const formatDate = (date: string) => {
         hour12: true,
     }).format(new Date(date));
 };
+
+export const formatTime = (date: string) => {
+    return new Intl.DateTimeFormat("es-MX", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+    }).format(new Date(date));
+};
